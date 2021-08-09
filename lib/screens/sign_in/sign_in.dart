@@ -13,9 +13,9 @@ class SignIn extends StatelessWidget {
       child: Column(
         children: [
           Spacer(),
-          Image.asset("assets/logo_name.png"),
+          Image.asset("assets/images/logo_name.png"),
           Spacer(),
-          Image.asset("assets/logo_image.png"),
+          Image.asset("assets/images/logo_image.png"),
           Spacer(),
           SignInForm(),
           Spacer(),

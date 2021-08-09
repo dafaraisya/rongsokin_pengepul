@@ -59,7 +59,7 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/
+    - assets/images/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
@@ -72,19 +72,38 @@ flutter:
   # in this "flutter" section. Each entry in this list should have a
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
-
   fonts:
-    - family: Montserrat
+    - family: Montserrat Regular
       fonts:
-        - asset: fonts/Montserrat-Regular.ttf
-        - asset: fonts/Montserrat-Montserrat-Italic.ttf
+        - asset: assets/fonts/Montserrat-Regular.ttf  
+    - family: Montserrat Italic
+      fonts:
+        - asset: assets/fonts/Montserrat-Italic.ttf  
           style: italic
-        - asset: fonts/Montserrat-Bold.ttf
-          weight: 700
-        - assets: fonts/Montserrat-SemiBold
+    - family: Montserrat Light
+      fonts:
+        - asset: assets/fonts/Montserrat-Light.ttf
+          weight: 200
+    - family: Montserrat SemiBold
+      fonts:
+        - asset: assets/fonts/Montserrat-SemiBold.ttf
           weight: 600
-        - assets: fonts/Montserrat-Light.ttf
-          weight: 200        
+    - family: Montserrat Bold
+      fonts:
+        - asset: assets/fonts/Montserrat-Bold.ttf
+          weight: 700
+  # fonts:
+  #   - family: Montserrat
+  #     fonts:
+  #       - asset: assets/fonts/Montserrat-Regular.ttf
+  #       - asset: assets/fonts/Montserrat-Montserrat-Italic.ttf
+  #         style: italic
+  #       - asset: assets/fonts/Montserrat-Bold.ttf
+  #         weight: 700
+  #       - assets: assets/fonts/Montserrat-SemiBold
+  #         weight: 600
+  #       - assets: assets/fonts/Montserrat-Light.ttf
+  #         weight: 200        
 
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

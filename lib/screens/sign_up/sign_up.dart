@@ -107,6 +107,36 @@ class _SignUpFormState extends State<SignUpForm> {
             ),
           ),
           SizedBox(height: 30),
+          //Confirm Password
+          TextFormField(
+            obscureText: true,
+            onSaved: (newValue) => password = newValue,
+            onChanged: (value) {
+              setState(() {
+                password = value;
+              });
+              return null;
+            },
+            decoration: InputDecoration(
+              floatingLabelBehavior: FloatingLabelBehavior.always,
+              labelText: "Konfirmasi Password",
+              labelStyle: TextStyle(fontSize: 20, color: kPrimaryColor),
+              hintText: "Masukkan konfirmasi password anda",
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(15.0),
+                borderSide: BorderSide(
+                  color: kPrimaryColor,
+                ),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(15.0),
+                borderSide: BorderSide(
+                  color: kPrimaryColor,
+                ),
+              ),
+            ),
+          ),
+          SizedBox(height: 30),
           //Nama Pengguna
           TextFormField(
             keyboardType: TextInputType.text,
