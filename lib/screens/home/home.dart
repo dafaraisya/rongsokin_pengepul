@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rongsokin_pengepul/components/default_appBar.dart';
 import 'package:rongsokin_pengepul/constant.dart';
 
 class Home extends StatefulWidget {
@@ -13,23 +14,7 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        toolbarHeight: 80,
-        elevation: 0,
-        backgroundColor: Colors.white,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Image(
-              image: AssetImage('assets/images/logo_image.png'),
-              width: 42,
-            ),
-            SizedBox(width: 10),
-            Image(image: AssetImage('assets/images/logo_name.png'))
-          ],
-        ),
-      ),
+      appBar: DefaultAppBar(),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 15),
         child: BottomNavigationBar(
