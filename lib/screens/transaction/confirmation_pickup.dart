@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:rongsokin_pengepul/components/default_appBar.dart';
 import 'package:rongsokin_pengepul/components/default_navBar.dart';
 import 'package:intl/intl.dart';
+import 'package:rongsokin_pengepul/enums.dart';
 
 class ConfirmationPickUp extends StatefulWidget {
   const ConfirmationPickUp({Key? key}) : super(key: key);
@@ -15,7 +16,7 @@ class _ConfirmationPickUpState extends State<ConfirmationPickUp> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: DefaultAppBar(),
-      bottomNavigationBar: DefaultNavBar(),
+      bottomNavigationBar: DefaultNavBar(selectedMenu: MenuState.transaction,),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: InkWell(
         onTap: () {},

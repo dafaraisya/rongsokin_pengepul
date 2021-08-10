@@ -1,7 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:rongsokin_pengepul/components/default_appBar.dart';
 import 'package:rongsokin_pengepul/components/default_navBar.dart';
-import 'package:rongsokin_pengepul/constant.dart';
+import 'package:rongsokin_pengepul/components/notification_alert_dialog.dart';
+import 'package:rongsokin_pengepul/enums.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -14,14 +17,30 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
+    //get data from firebase
+    final user = FirebaseAuth.instance.currentUser != null ? FirebaseAuth.instance.currentUser : null;
+    var db = FirebaseFirestore.instance;
+    final dataProfileUser =
+        db.collection("usersPengepul").doc(user?.uid ?? null).snapshots();
+
     return Scaffold(
       appBar: DefaultAppBar(),
-      bottomNavigationBar: DefaultNavBar(),
+      bottomNavigationBar: DefaultNavBar(selectedMenu: MenuState.home),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: InkWell(
-          onTap: () {},
+          onTap: () {
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return NotificationAlertDialog(
+                  context: context,
+                  press: () {},
+                );
+              },
+            );
+          },
           child: Container(
             height: 60,
             width: MediaQuery.of(context).size.width,
@@ -60,36 +79,47 @@ class _HomeState extends State<Home> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               // Halo to users
-              Container(
-                height: 80,
-                decoration: BoxDecoration(
-                  color: Color(0xFFFFC233),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 20),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Halo,',
-                        style: TextStyle(
-                          fontFamily: 'Montserrat',
-                          fontSize: 22,
+              user == null ? Container() : StreamBuilder(
+                stream: dataProfileUser,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return Container(
+                      height: 80,
+                      decoration: BoxDecoration(
+                        color: Color(0xFFFFC233),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 20),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Halo,',
+                              style: TextStyle(
+                                fontFamily: 'Montserrat',
+                                fontSize: 22,
+                              ),
+                            ),
+                            Text(
+                              (snapshot.data as dynamic)["username"],
+                              style: TextStyle(
+                                fontFamily: 'Montserrat',
+                                fontSize: 25,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                      Text(
-                        'Joko Sumanto',
-                        style: TextStyle(
-                          fontFamily: 'Montserrat',
-                          fontSize: 25,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                    );
+                  }
+
+                  return Center(
+                    child: Text('Loading...'),
+                  );
+                },
               ),
               SizedBox(height: 23),
               // Profile Text

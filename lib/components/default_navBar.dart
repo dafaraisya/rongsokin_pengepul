@@ -1,36 +1,75 @@
 import 'package:flutter/material.dart';
+import 'package:rongsokin_pengepul/constant.dart';
+import 'package:rongsokin_pengepul/enums.dart';
+import 'package:rongsokin_pengepul/screens/home/home.dart';
+import 'package:rongsokin_pengepul/screens/profile/profile.dart';
+import 'package:rongsokin_pengepul/screens/transaction/confirmation_pickup.dart';
 
-class DefaultNavBar extends StatefulWidget {
-  const DefaultNavBar({Key? key}) : super(key: key);
+class DefaultNavBar extends StatelessWidget {
+  const DefaultNavBar({
+    Key? key,
+    required this.selectedMenu,
+  }) : super(key: key);
 
-  @override
-  _DefaultNavBarState createState() => _DefaultNavBarState();
-}
-
-class _DefaultNavBarState extends State<DefaultNavBar> {
+  final MenuState selectedMenu;
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 15),
-      child: BottomNavigationBar(
-        unselectedItemColor: Color(0xFF1D438A),
-        selectedItemColor: Color(0xFF1D438A),
-        iconSize: 30,
-        type: BottomNavigationBarType.fixed,
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.receipt_long),
-            label: 'Transaksi',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profil',
-          )
+    final Color inActiveIconColor = Color(0xFFB6B6B6);
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 5),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.8),
+            spreadRadius: 8,
+            blurRadius: 10,
+            offset: Offset(0, 5)),
         ],
+      ),
+      child: SafeArea(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            IconButton(
+              icon: Icon(
+                Icons.home,
+                color: MenuState.home == selectedMenu
+                    ? kPrimaryColor
+                    : inActiveIconColor,
+              ),
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(builder: (_) {
+                  return Home();
+                }));
+              },
+            ),
+            IconButton(
+              icon: Icon(Icons.receipt_long,
+                  color: MenuState.transaction == selectedMenu
+                      ? kPrimaryColor
+                      : inActiveIconColor),
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                  return ConfirmationPickUp();
+                }));
+              },
+            ),
+            IconButton(
+              icon: Icon(
+                Icons.person,
+                color: MenuState.profile == selectedMenu
+                    ? kPrimaryColor
+                    : inActiveIconColor,
+              ),
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                  return Profile();
+                }));
+              },
+            ),
+          ],
+        )
       ),
     );
   }
