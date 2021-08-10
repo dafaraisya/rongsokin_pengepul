@@ -41,123 +41,125 @@ class _ConfirmationPickUpState extends State<ConfirmationPickUp> {
           ),
         ),
       ),
-      body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            // Detail User Text
-            Text(
-              'DETAIL USER',
-              style: TextStyle(
-                color: Color(0xFF163570),
-                fontFamily: 'Montserrat',
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // Detail User Text
+              Text(
+                'DETAIL USER',
+                style: TextStyle(
+                  color: Color(0xFF163570),
+                  fontFamily: 'Montserrat',
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-            SizedBox(height: 10),
-            //Detail User Container
-            Stack(
-              alignment: Alignment.center,
-              children: [
-                Container(
-                  height: 120,
-                  decoration: BoxDecoration(
-                    color: Color(0xFFFFC233),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                        left: 40, right: 40, top: 20, bottom: 15),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Pasha Ungu',
-                              style: TextStyle(
-                                fontFamily: 'Montserrat',
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  Icons.phone,
-                                  size: 26,
-                                ),
-                                SizedBox(width: 3),
-                                Text(
-                                  '+6281658737356',
-                                  style: TextStyle(
-                                    fontFamily: 'Montserrat',
-                                    fontSize: 16,
-                                  ),
-                                ),
-                              ],
-                            )
-                          ],
-                        ),
-                        Spacer(),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.location_on,
-                              size: 27,
-                            ),
-                            SizedBox(width: 7),
-                            Flexible(
-                              child: Text(
-                                'Jl. Teknik Kimia, Keputih, Kec. Sukolilo, Kota SBY, Jawa Timur 60111',
+              SizedBox(height: 10),
+              //Detail User Container
+              Stack(
+                alignment: Alignment.center,
+                children: [
+                  Container(
+                    height: 120,
+                    decoration: BoxDecoration(
+                      color: Color(0xFFFFC233),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                          left: 40, right: 40, top: 20, bottom: 15),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'Pasha Ungu',
                                 style: TextStyle(
                                   fontFamily: 'Montserrat',
-                                  fontSize: 14,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
-                            )
-                          ],
-                        ),
-                      ],
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.phone,
+                                    size: 26,
+                                  ),
+                                  SizedBox(width: 3),
+                                  Text(
+                                    '+6281658737356',
+                                    style: TextStyle(
+                                      fontFamily: 'Montserrat',
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
+                          Spacer(),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.location_on,
+                                size: 27,
+                              ),
+                              SizedBox(width: 7),
+                              Flexible(
+                                child: Text(
+                                  'Jl. Teknik Kimia, Keputih, Kec. Sukolilo, Kota SBY, Jawa Timur 60111',
+                                  style: TextStyle(
+                                    fontFamily: 'Montserrat',
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: Container(
-                    height: 2,
-                    color: Colors.white,
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: Container(
+                      height: 2,
+                      color: Colors.white,
+                    ),
                   ),
+                ],
+              ),
+              SizedBox(height: 20),
+              Text(
+                'DETAIL BARANG',
+                style: TextStyle(
+                  color: Color(0xFF163570),
+                  fontFamily: 'Montserrat',
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
                 ),
-              ],
-            ),
-            SizedBox(height: 20),
-            Text(
-              'DETAIL BARANG',
-              style: TextStyle(
-                color: Color(0xFF163570),
-                fontFamily: 'Montserrat',
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
               ),
-            ),
-            SizedBox(height: 10),
-            Container(
-              height: MediaQuery.of(context).size.height - 470,
-              child: ListView.builder(
-                itemCount: 5,
-                itemBuilder: (context, index) {
-                  return ItemListCard();
-                },
-              ),
-            )
-          ],
+              SizedBox(height: 10),
+              Container(
+                height: MediaQuery.of(context).size.height - 520,
+                child: ListView.builder(
+                  itemCount: 5,
+                  itemBuilder: (context, index) {
+                    return ItemListCard();
+                  },
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -172,7 +174,7 @@ class ItemListCard extends StatefulWidget {
 }
 
 class _ItemListCardState extends State<ItemListCard> {
-  bool _isChecked = false;
+  bool _isChecked = true;
   int price = 10000;
   int weight = 1;
   var currency = new NumberFormat.simpleCurrency(locale: 'id_ID');
