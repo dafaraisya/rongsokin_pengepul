@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "903806546678",
+    "project_id": "rongsokin-15f62",
+    "storage_bucket": "rongsokin-15f62.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:903806546678:android:115d40ebb480d09fe0f2d7",
+        "android_client_info": {
+          "package_name": "com.rongsokin.rongsokin_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "903806546678-ncab28tqnglmrjid0o6rjkl4t5c4ik6l.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.rongsokin.rongsokin_app",
+            "certificate_hash": "cdc78129aa69a9b37202270f4589506ac3d8d683"
+          }
+        },
+        {
+          "client_id": "903806546678-rrq98oa87acqqef96c1cbfjno1cfjf7f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCW5ZLmC52bgaWsxYopPcnW-434i-lWl90"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "903806546678-rrq98oa87acqqef96c1cbfjno1cfjf7f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
