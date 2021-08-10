@@ -22,6 +22,7 @@ class MyApp extends StatelessWidget {
         title: 'Rongsokin Pengepul',
         theme: ThemeData(
           primarySwatch: Colors.blue,
+          fontFamily: 'Montserrat',
         ),
         home: Wrapper(),
         // home: MyHomePage(title: 'Flutter Demo Home Page'),
