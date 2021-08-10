@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rongsokin_pengepul/components/default_appBar.dart';
+import 'package:rongsokin_pengepul/components/default_navBar.dart';
 import 'package:rongsokin_pengepul/constant.dart';
 
 class Home extends StatefulWidget {
@@ -9,35 +10,13 @@ class Home extends StatefulWidget {
   _HomeState createState() => _HomeState();
 }
 
-// Nav Bar Belum di atur (ntar jadiin component)
+// Component Nav Bar masih statis
 class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: DefaultAppBar(),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 15),
-        child: BottomNavigationBar(
-          unselectedItemColor: Color(0xFF1D438A),
-          selectedItemColor: Color(0xFF1D438A),
-          iconSize: 30,
-          type: BottomNavigationBarType.fixed,
-          items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: 'Home',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.receipt_long),
-              label: 'Transaksi',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.person),
-              label: 'Profil',
-            )
-          ],
-        ),
-      ),
+      bottomNavigationBar: DefaultNavBar(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -249,7 +228,7 @@ class HistoryContent extends StatelessWidget {
                   ),
                   SizedBox(height: 3),
                   Text(
-                    'Berat : ${weight} Kg',
+                    'Berat : ' + weight.toString() + ' Kg',
                     style: TextStyle(
                       fontFamily: 'Montserrat',
                       fontSize: 13,
