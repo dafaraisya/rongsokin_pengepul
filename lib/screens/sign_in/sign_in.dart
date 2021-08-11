@@ -131,7 +131,7 @@ class _SignInFormState extends State<SignInForm> {
             ],
           ),
         ),
-        SizedBox(height: 10,),
+        SizedBox(height: 20,),
         DefaultButton(
           text: "Login",
           press: () async {

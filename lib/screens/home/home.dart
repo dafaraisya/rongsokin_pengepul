@@ -75,15 +75,14 @@ class _HomeState extends State<Home> {
       body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              // Halo to users
-              user == null ? Container() : StreamBuilder(
-                stream: dataProfileUser,
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return Container(
+          child: user == null ? Container() : StreamBuilder(
+            stream: dataProfileUser,
+            builder: (context, snapshot) {
+              if(snapshot.hasData) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Container(
                       height: 80,
                       decoration: BoxDecoration(
                         color: Color(0xFFFFC233),
@@ -113,101 +112,143 @@ class _HomeState extends State<Home> {
                           ],
                         ),
                       ),
-                    );
-                  }
-
-                  return Center(
-                    child: Text('Loading...'),
-                  );
-                },
-              ),
-              SizedBox(height: 23),
-              // Profile Text
-              Padding(
-                padding: const EdgeInsets.only(left: 20),
-                child: Text(
-                  'PROFILE',
-                  style: TextStyle(
-                    color: Color(0xFF1D438A),
-                    fontFamily: 'Montserrat',
-                    fontSize: 15,
-                  ),
-                ),
-              ),
-              SizedBox(height: 5),
-              // Profile Container
-              Container(
-                height: 155,
-                child: Card(
-                  elevation: 6,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Padding(
-                    padding:
-                        const EdgeInsets.only(left: 40, right: 40, top: 20),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        // Class ProfileContent ada di bawah
-                        ProfileContent(
-                          asset: 'assets/images/total_transaction.png',
-                          text: 'Total\nTransaksi',
-                          amount: '15',
-                        ),
-                        ProfileContent(
-                          asset: 'assets/images/rating.png',
-                          text: 'Rating',
-                          amount: '4.9',
-                        ),
-                        ProfileContent(
-                          asset: 'assets/images/point.png',
-                          text: 'Rongsok\nPoint',
-                          amount: '140',
-                        ),
-                      ],
                     ),
-                  ),
-                ),
-              ),
-              SizedBox(height: 23),
-              // Text Riwayat
-              Padding(
-                padding: const EdgeInsets.only(left: 20),
-                child: Text(
-                  'RIWAYAT',
-                  style: TextStyle(
-                    color: Color(0xFF1D438A),
-                    fontFamily: 'Montserrat',
-                    fontSize: 15,
-                  ),
-                ),
-              ),
-              SizedBox(height: 5),
-              // Class HistoryContent ada di bawah
-              HistoryContent(
-                name: 'Nisa Sabyan',
-                weight: 2,
-                address: 'Jl Panderman Gang 5',
-                price: 'Rp100.000,00',
-                date: '27 Agustus 2021',
-              ),
-              HistoryContent(
-                name: 'Nisa Sabyan',
-                weight: 2,
-                address: 'Jl Panderman Gang 5',
-                price: 'Rp100.000,00',
-                date: '27 Agustus 2021',
-              ),
-              HistoryContent(
-                name: 'Nisa Sabyan',
-                weight: 2,
-                address: 'Jl Panderman Gang 5',
-                price: 'Rp100.000,00',
-                date: '27 Agustus 2021',
-              ),
-              SizedBox(height: 50),
-            ],
+                    // Halo to users
+                    // user == null ? Container() : StreamBuilder(
+                    //   stream: dataProfileUser,
+                    //   builder: (context, snapshot) {
+                    //     if (snapshot.hasData) {
+                    //       return Container(
+                    //         height: 80,
+                    //         decoration: BoxDecoration(
+                    //           color: Color(0xFFFFC233),
+                    //           borderRadius: BorderRadius.circular(10),
+                    //         ),
+                    //         child: Padding(
+                    //           padding: const EdgeInsets.only(left: 20),
+                    //           child: Column(
+                    //             mainAxisAlignment: MainAxisAlignment.center,
+                    //             crossAxisAlignment: CrossAxisAlignment.start,
+                    //             children: [
+                    //               Text(
+                    //                 'Halo,',
+                    //                 style: TextStyle(
+                    //                   fontFamily: 'Montserrat',
+                    //                   fontSize: 22,
+                    //                 ),
+                    //               ),
+                    //               Text(
+                    //                 (snapshot.data as dynamic)["username"],
+                    //                 style: TextStyle(
+                    //                   fontFamily: 'Montserrat',
+                    //                   fontSize: 25,
+                    //                   fontWeight: FontWeight.bold,
+                    //                 ),
+                    //               ),
+                    //             ],
+                    //           ),
+                    //         ),
+                    //       );
+                    //     }
+            
+                    //     return Center(
+                    //       child: Text('Loading...'),
+                    //     );
+                    //   },
+                    // ),
+                    SizedBox(height: 23),
+                    // Profile Text
+                    Padding(
+                      padding: const EdgeInsets.only(left: 20),
+                      child: Text(
+                        'PROFILE',
+                        style: TextStyle(
+                          color: Color(0xFF1D438A),
+                          fontFamily: 'Montserrat',
+                          fontSize: 15,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 5),
+                    // Profile Container
+                    Container(
+                      height: 155,
+                      child: Card(
+                        elevation: 6,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Padding(
+                          padding:
+                              const EdgeInsets.only(left: 40, right: 40, top: 20),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              // Class ProfileContent ada di bawah
+                              ProfileContent(
+                                asset: 'assets/images/total_transaction.png',
+                                text: 'Total\nTransaksi',
+                                amount: (snapshot.data as dynamic)["totalTransaction"].toString(),
+                              ),
+                              ProfileContent(
+                                asset: 'assets/images/rating.png',
+                                text: 'Rating',
+                                amount: (snapshot.data as dynamic)["rating"].toString(),
+                              ),
+                              ProfileContent(
+                                asset: 'assets/images/point.png',
+                                text: 'Rongsok\nPoint',
+                                amount: (snapshot.data as dynamic)["poin"].toString(),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 23),
+                    // Text Riwayat
+                    Padding(
+                      padding: const EdgeInsets.only(left: 20),
+                      child: Text(
+                        'RIWAYAT',
+                        style: TextStyle(
+                          color: Color(0xFF1D438A),
+                          fontFamily: 'Montserrat',
+                          fontSize: 15,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 5),
+                    // Class HistoryContent ada di bawah
+                    HistoryContent(
+                      name: 'Nisa Sabyan',
+                      weight: 2,
+                      address: 'Jl Panderman Gang 5',
+                      price: 'Rp100.000,00',
+                      date: '27 Agustus 2021',
+                    ),
+                    HistoryContent(
+                      name: 'Nisa Sabyan',
+                      weight: 2,
+                      address: 'Jl Panderman Gang 5',
+                      price: 'Rp100.000,00',
+                      date: '27 Agustus 2021',
+                    ),
+                    HistoryContent(
+                      name: 'Nisa Sabyan',
+                      weight: 2,
+                      address: 'Jl Panderman Gang 5',
+                      price: 'Rp100.000,00',
+                      date: '27 Agustus 2021',
+                    ),
+                    SizedBox(height: 50),
+                  ],
+                );
+              }
+              return Center(
+                child: Text('Loading...'),
+              );
+            }
           ),
         ),
       ),

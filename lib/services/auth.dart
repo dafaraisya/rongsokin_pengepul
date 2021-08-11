@@ -18,7 +18,7 @@ class AuthService extends ChangeNotifier {
       UserCredential authResult = await firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
       User user = authResult.user!;
       //buat document 
-      await DatabaseService(uid: user.uid).updateUserData(username, address, birthDate, phoneNumber);
+      await DatabaseService(uid: user.uid).createUserData(username, address, birthDate, phoneNumber);
       setLoading(false);
       return user;
     } on SocketException {

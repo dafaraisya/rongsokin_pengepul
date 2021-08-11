@@ -11,12 +11,15 @@ class DatabaseService {
   //initialize firestore
   var db = FirebaseFirestore.instance;
 
-  Future updateUserData(String username, String address, Timestamp birthDate, String phoneNumber) async {
+  Future createUserData(String username, String address, Timestamp birthDate, String phoneNumber) async {
     db.collection("usersPengepul").doc(uid).set({
       'username' : username,
       'address' : address,
       'birthDate' : birthDate,
-      'phoneNumber' : phoneNumber
+      'phoneNumber' : phoneNumber,
+      'totalTransaction' : 0,
+      'rating' : 0.0,
+      'poin' : 0
     });
   }
 
