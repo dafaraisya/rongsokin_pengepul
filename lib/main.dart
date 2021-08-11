@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:rongsokin_pengepul/screens/wrapper.dart';
 import 'package:rongsokin_pengepul/services/auth.dart';
 
-Future main() async{
+Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(const MyApp());
@@ -19,9 +19,10 @@ class MyApp extends StatelessWidget {
       create: (context) => AuthService(),
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'Flutter Demo',
+        title: 'Rongsokin Pengepul',
         theme: ThemeData(
           primarySwatch: Colors.blue,
+          fontFamily: 'Montserrat',
         ),
         home: Wrapper(),
         // home: MyHomePage(title: 'Flutter Demo Home Page'),

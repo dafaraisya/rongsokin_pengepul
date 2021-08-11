@@ -34,7 +34,7 @@ class _ConfirmationPickUpState extends State<ConfirmationPickUp> {
                 'Ambil Sekarang',
                 style: TextStyle(
                   color: Color(0xFF1D438A),
-                  fontFamily: 'Montserrat',
+                  
                   fontSize: 22,
                 ),
               ),
@@ -54,7 +54,7 @@ class _ConfirmationPickUpState extends State<ConfirmationPickUp> {
                 'DETAIL USER',
                 style: TextStyle(
                   color: Color(0xFF163570),
-                  fontFamily: 'Montserrat',
+                  
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
@@ -81,8 +81,7 @@ class _ConfirmationPickUpState extends State<ConfirmationPickUp> {
                             children: [
                               Text(
                                 'Pasha Ungu',
-                                style: TextStyle(
-                                  fontFamily: 'Montserrat',
+                                style: TextStyle(                                 
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -97,8 +96,7 @@ class _ConfirmationPickUpState extends State<ConfirmationPickUp> {
                                   SizedBox(width: 3),
                                   Text(
                                     '+6281658737356',
-                                    style: TextStyle(
-                                      fontFamily: 'Montserrat',
+                                    style: TextStyle(                                     
                                       fontSize: 16,
                                     ),
                                   ),
@@ -118,8 +116,7 @@ class _ConfirmationPickUpState extends State<ConfirmationPickUp> {
                               Flexible(
                                 child: Text(
                                   'Jl. Teknik Kimia, Keputih, Kec. Sukolilo, Kota SBY, Jawa Timur 60111',
-                                  style: TextStyle(
-                                    fontFamily: 'Montserrat',
+                                  style: TextStyle(                                  
                                     fontSize: 14,
                                   ),
                                 ),
@@ -144,7 +141,6 @@ class _ConfirmationPickUpState extends State<ConfirmationPickUp> {
                 'DETAIL BARANG',
                 style: TextStyle(
                   color: Color(0xFF163570),
-                  fontFamily: 'Montserrat',
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
@@ -203,7 +199,7 @@ class _ItemListCardState extends State<ItemListCard> {
           title: Text(
             'Botol Kaca',
             style: TextStyle(
-              fontFamily: 'Montserrat',
+              
               fontSize: 18,
               fontWeight: FontWeight.w600,
             ),
@@ -211,8 +207,7 @@ class _ItemListCardState extends State<ItemListCard> {
           subtitle: Text(
             'Barang kondisi baik hanya goresan dikit',
             style: TextStyle(
-              color: Colors.black,
-              fontFamily: 'Montserrat',
+              color: Colors.black,            
               fontSize: 12,
             ),
           ),
@@ -222,8 +217,7 @@ class _ItemListCardState extends State<ItemListCard> {
               children: [
                 Text(
                   '${currency.format(price * weight)}',
-                  style: TextStyle(
-                    fontFamily: 'Montserrat',
+                  style: TextStyle(                   
                     fontSize: 16,
                   ),
                 ),
@@ -250,7 +244,7 @@ class _ItemListCardState extends State<ItemListCard> {
                     Text(
                       weight.toString() + ' Kg',
                       style: TextStyle(
-                        fontFamily: 'Montserrat',
+                        
                         fontSize: 15,
                       ),
                     ),
