@@ -55,6 +55,32 @@ class AuthService extends ChangeNotifier {
       print(e.toString());
     }
   }
+  
+  Future updateTerimaRequests(String idDocument) async{
+    try{
+      DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance.collection('requests').doc(idDocument).get(); 
+      dynamic jsonDocument = documentSnapshot.data();
+      if(jsonDocument['diambil'] == false ) {
+        final user = FirebaseAuth.instance.currentUser != null ? FirebaseAuth.instance.currentUser : null;
+        await DatabaseService(uid: user?.uid ?? null).updateTerimaRequests(idDocument);
+        return user;
+      } else {
+        return null;
+      }
+    }catch(e){
+      print(e.toString());
+    }
+  }
+
+  Future updateTolakRequests(List<String> tolakRequests) async{
+    try{
+      final user = FirebaseAuth.instance.currentUser != null ? FirebaseAuth.instance.currentUser : null;
+      await DatabaseService(uid: user?.uid ?? null).updateTolakRequests(tolakRequests);
+      return user;
+    }catch(e){
+      print(e.toString());
+    }
+  }
 
   void setLoading(val) {
     _isLoading = val;

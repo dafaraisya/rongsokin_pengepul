@@ -3,7 +3,7 @@ import 'package:rongsokin_pengepul/constant.dart';
 import 'package:rongsokin_pengepul/enums.dart';
 import 'package:rongsokin_pengepul/screens/home/home.dart';
 import 'package:rongsokin_pengepul/screens/profile/profile.dart';
-import 'package:rongsokin_pengepul/screens/transaction/confirmation_pickup.dart';
+// import 'package:rongsokin_pengepul/screens/transaction/confirmation_pickup.dart';
 
 class DefaultNavBar extends StatelessWidget {
   const DefaultNavBar({
@@ -50,9 +50,9 @@ class DefaultNavBar extends StatelessWidget {
                       ? kPrimaryColor
                       : inActiveIconColor),
               onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-                  return ConfirmationPickUp();
-                }));
+                // Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                //   return ConfirmationPickUp();
+                // }));
               },
             ),
             IconButton(

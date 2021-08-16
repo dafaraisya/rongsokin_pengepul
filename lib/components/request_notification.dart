@@ -1,18 +1,27 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:rongsokin_pengepul/constant.dart';
+import 'package:rongsokin_pengepul/screens/home/home.dart';
+import 'package:rongsokin_pengepul/screens/transaction/confirmation_pickup.dart';
+import 'package:rongsokin_pengepul/services/auth.dart';
 
-class NotificationAlertDialog extends StatelessWidget {
-  const NotificationAlertDialog({
+class RequestNotification extends StatelessWidget {
+  const RequestNotification({
     Key? key,
+    required this.idDocument,
     required this.context,
     required this.press,
+    required this.tolakRequests,
   }) : super(key: key);
 
+  final String idDocument;
   final BuildContext context;
   final VoidCallback? press;
+  final List<String> tolakRequests;
 
   @override
   Widget build(context) {
+    final AuthService _auth = AuthService();
     return AlertDialog(
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(15.0))),
@@ -65,32 +74,36 @@ class NotificationAlertDialog extends StatelessWidget {
             ),
             Padding(
               padding: const EdgeInsets.all(15.0),
-              child: TextFormField(
-                keyboardType: TextInputType.emailAddress,
-                // onSaved: (newValue) => email = newValue,
-                onChanged: (value) {
-                  // setState(() {
-                  //   email = value;
-                  // });
+              child: StreamBuilder(
+                stream: FirebaseFirestore.instance
+                  .collection("requests")
+                  .doc(idDocument)
+                  .snapshots(),
+                builder: (context, snapshot) {
+                  if(snapshot.hasData) {
+                    return ListView.builder(
+                      scrollDirection: Axis.vertical,
+                      shrinkWrap: true,
+                      itemCount: (snapshot.data as dynamic)["listBarang"].length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return Column(
+                          children: <Widget>[
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                Text((snapshot.data as dynamic)["listBarang"][index]["namaBarang"]),
+                                Text((snapshot.data as dynamic)["listBarang"][index]["berat"].toString())
+                              ],
+                            )
+                            
+                          ],
+                        );
+                      },
+                    );
+                  }
+                  return Container();
                 },
-                decoration: InputDecoration(
-                  floatingLabelBehavior: FloatingLabelBehavior.always,
-                  labelText: "Detail Barang",
-                  labelStyle: TextStyle(fontSize: 20, color: kPrimaryColor),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(15.0),
-                    borderSide: BorderSide(
-                      color: kPrimaryColor,
-                    ),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(15.0),
-                    borderSide: BorderSide(
-                      color: kPrimaryColor,
-                    ),
-                  ),
-                ),
-              ),
+              )
             ),
             SizedBox(
               height: 5.0,
@@ -99,7 +112,12 @@ class NotificationAlertDialog extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 InkWell(
-                  onTap: () {
+                  onTap: () async{
+                    tolakRequests.add(idDocument);
+                    dynamic result = await _auth.updateTolakRequests(tolakRequests);
+                    if(result == null) {
+                      print('result null');
+                    }
                     Navigator.pop(context);
                   },
                   child: Container(
@@ -119,7 +137,16 @@ class NotificationAlertDialog extends StatelessWidget {
                   ),
                 ),
                 InkWell(
-                  onTap: press,
+                  onTap: () async{
+                    dynamic result = await _auth.updateTerimaRequests(idDocument);
+                    if(result == null) {
+                      print('sudah diambil');
+                    } else {
+                      Navigator.of(context).push(MaterialPageRoute(builder: (_) {
+                        return ConfirmationPickUp(idDocument: idDocument,);
+                      }));                      
+                    }
+                  },
                   child: Container(
                     width: 150,
                     padding: EdgeInsets.only(top: 20.0, bottom: 20.0),

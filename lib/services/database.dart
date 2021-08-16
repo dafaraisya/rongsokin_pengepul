@@ -23,6 +23,19 @@ class DatabaseService {
     });
   }
 
+  Future updateTerimaRequests(String idDocument) async {
+    db.collection("requests").doc(idDocument).update({
+      'diambil' : true,
+      'userPengepulId' : uid 
+    });
+  }
+
+  Future updateTolakRequests(List<String> TolakRequests) async {
+    db.collection("usersPengepul").doc(uid).update({
+      'tolakRequests' : TolakRequests 
+    });
+  }
+
   Future<DocumentSnapshot> getUsers(String id) async {
     return await db.collection("userPengepul").doc(id).get();
     // final userData = await db.collection("userPengepul").doc(id).snapshots();

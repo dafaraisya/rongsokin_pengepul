@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:rongsokin_pengepul/components/default_appBar.dart';
 import 'package:rongsokin_pengepul/components/default_navBar.dart';
@@ -5,7 +6,12 @@ import 'package:intl/intl.dart';
 import 'package:rongsokin_pengepul/enums.dart';
 
 class ConfirmationPickUp extends StatefulWidget {
-  const ConfirmationPickUp({Key? key}) : super(key: key);
+  const ConfirmationPickUp({
+    Key? key, 
+    required this.idDocument
+  }) : super(key: key);
+
+  final String idDocument;
 
   @override
   _ConfirmationPickUpState createState() => _ConfirmationPickUpState();
@@ -148,13 +154,34 @@ class _ConfirmationPickUpState extends State<ConfirmationPickUp> {
               SizedBox(height: 10),
               Container(
                 height: MediaQuery.of(context).size.height - 520,
-                child: ListView.builder(
-                  itemCount: 5,
-                  itemBuilder: (context, index) {
-                    return ItemListCard();
+                child: StreamBuilder(
+                  stream: FirebaseFirestore.instance
+                    .collection("requests")
+                    .doc(widget.idDocument)
+                    .snapshots(),
+                  builder: (context, snapshot) {
+                    if(snapshot.hasData) {
+                      return ListView.builder(
+                        scrollDirection: Axis.vertical,
+                        shrinkWrap: true,
+                        itemCount: (snapshot.data as dynamic)["listBarang"].length,
+                        itemBuilder: (context, index) {
+                          return ItemListCard(
+                            namaBarang: (snapshot.data as dynamic)["listBarang"][index]["namaBarang"],
+                            deskripsi: (snapshot.data as dynamic)["listBarang"][index]["deskripsi"],
+                            harga: (snapshot.data as dynamic)["listBarang"][index]["harga"],
+                            berat: (snapshot.data as dynamic)["listBarang"][index]["berat"],
+                          );
+                        },
+                      );
+                    }
+                    
+                    return Container(
+                      child: Text('Loading...'),
+                    );
                   },
                 ),
-              )
+              ),
             ],
           ),
         ),
@@ -164,7 +191,18 @@ class _ConfirmationPickUpState extends State<ConfirmationPickUp> {
 }
 
 class ItemListCard extends StatefulWidget {
-  const ItemListCard({Key? key}) : super(key: key);
+  const ItemListCard({
+    Key? key,
+    required this.namaBarang,
+    required this.deskripsi,
+    required this.berat,
+    required this.harga,
+  }) : super(key: key);
+
+  final String namaBarang;
+  final String deskripsi;
+  final int berat;
+  final int harga;
 
   @override
   _ItemListCardState createState() => _ItemListCardState();
@@ -178,6 +216,8 @@ class _ItemListCardState extends State<ItemListCard> {
 
   @override
   Widget build(BuildContext context) {
+    price = widget.harga;
+    weight = widget.berat;
     return Card(
       elevation: 6,
       shape: RoundedRectangleBorder(
@@ -197,7 +237,7 @@ class _ItemListCardState extends State<ItemListCard> {
             },
           ),
           title: Text(
-            'Botol Kaca',
+             widget.namaBarang,
             style: TextStyle(
               
               fontSize: 18,
@@ -205,7 +245,7 @@ class _ItemListCardState extends State<ItemListCard> {
             ),
           ),
           subtitle: Text(
-            'Barang kondisi baik hanya goresan dikit',
+            widget.deskripsi,
             style: TextStyle(
               color: Colors.black,            
               fontSize: 12,

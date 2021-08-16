@@ -1,11 +1,16 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:rongsokin_pengepul/components/default_appBar.dart';
 import 'package:rongsokin_pengepul/components/default_navBar.dart';
-import 'package:rongsokin_pengepul/components/notification_alert_dialog.dart';
+import 'package:rongsokin_pengepul/components/request_notification.dart';
+import 'package:rongsokin_pengepul/constant.dart';
 import 'package:rongsokin_pengepul/enums.dart';
 
+List<String> tolakRequests = [];
+bool isSwitched = false;
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
 
@@ -17,8 +22,10 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
-    //get data from firebase
-    final user = FirebaseAuth.instance.currentUser != null ? FirebaseAuth.instance.currentUser : null;
+    //get data user from firebase
+    final user = FirebaseAuth.instance.currentUser != null
+        ? FirebaseAuth.instance.currentUser
+        : null;
     var db = FirebaseFirestore.instance;
     final dataProfileUser =
         db.collection("usersPengepul").doc(user?.uid ?? null).snapshots();
@@ -30,17 +37,7 @@ class _HomeState extends State<Home> {
       floatingActionButton: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: InkWell(
-          onTap: () {
-            showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return NotificationAlertDialog(
-                  context: context,
-                  press: () {},
-                );
-              },
-            );
-          },
+          onTap: () {},
           child: Container(
             height: 60,
             width: MediaQuery.of(context).size.width,
@@ -63,8 +60,14 @@ class _HomeState extends State<Home> {
                 ),
                 Spacer(),
                 Switch(
-                  value: true,
-                  onChanged: (value) {},
+                  value: isSwitched,
+                  onChanged: (value) {
+                    setState(() {
+                      isSwitched = value;                
+                    });
+                  },
+                  activeTrackColor: Colors.grey[300],
+                  activeColor: kPrimaryColor,
                 ),
                 Spacer()
               ],
@@ -78,7 +81,11 @@ class _HomeState extends State<Home> {
           child: user == null ? Container() : StreamBuilder(
             stream: dataProfileUser,
             builder: (context, snapshot) {
-              if(snapshot.hasData) {
+              if (snapshot.hasData) {
+                tolakRequests.clear();
+                for (var i = 0; i < (snapshot.data as dynamic)["tolakRequests"].length; i++) {
+                  tolakRequests.add((snapshot.data as dynamic)["tolakRequests"][i]);
+                }
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
@@ -113,49 +120,6 @@ class _HomeState extends State<Home> {
                         ),
                       ),
                     ),
-                    // Halo to users
-                    // user == null ? Container() : StreamBuilder(
-                    //   stream: dataProfileUser,
-                    //   builder: (context, snapshot) {
-                    //     if (snapshot.hasData) {
-                    //       return Container(
-                    //         height: 80,
-                    //         decoration: BoxDecoration(
-                    //           color: Color(0xFFFFC233),
-                    //           borderRadius: BorderRadius.circular(10),
-                    //         ),
-                    //         child: Padding(
-                    //           padding: const EdgeInsets.only(left: 20),
-                    //           child: Column(
-                    //             mainAxisAlignment: MainAxisAlignment.center,
-                    //             crossAxisAlignment: CrossAxisAlignment.start,
-                    //             children: [
-                    //               Text(
-                    //                 'Halo,',
-                    //                 style: TextStyle(
-                    //                   fontFamily: 'Montserrat',
-                    //                   fontSize: 22,
-                    //                 ),
-                    //               ),
-                    //               Text(
-                    //                 (snapshot.data as dynamic)["username"],
-                    //                 style: TextStyle(
-                    //                   fontFamily: 'Montserrat',
-                    //                   fontSize: 25,
-                    //                   fontWeight: FontWeight.bold,
-                    //                 ),
-                    //               ),
-                    //             ],
-                    //           ),
-                    //         ),
-                    //       );
-                    //     }
-            
-                    //     return Center(
-                    //       child: Text('Loading...'),
-                    //     );
-                    //   },
-                    // ),
                     SizedBox(height: 23),
                     // Profile Text
                     Padding(
@@ -179,26 +143,33 @@ class _HomeState extends State<Home> {
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: Padding(
-                          padding:
-                              const EdgeInsets.only(left: 40, right: 40, top: 20),
+                          padding: const EdgeInsets.only(
+                              left: 40, right: 40, top: 20),
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            mainAxisAlignment:
+                                MainAxisAlignment.spaceBetween,
                             children: [
                               // Class ProfileContent ada di bawah
                               ProfileContent(
-                                asset: 'assets/images/total_transaction.png',
+                                asset:
+                                    'assets/images/total_transaction.png',
                                 text: 'Total\nTransaksi',
-                                amount: (snapshot.data as dynamic)["totalTransaction"].toString(),
+                                amount: (snapshot.data
+                                        as dynamic)["totalTransaction"]
+                                    .toString(),
                               ),
                               ProfileContent(
                                 asset: 'assets/images/rating.png',
                                 text: 'Rating',
-                                amount: (snapshot.data as dynamic)["rating"].toString(),
+                                amount:
+                                    (snapshot.data as dynamic)["rating"]
+                                        .toString(),
                               ),
                               ProfileContent(
                                 asset: 'assets/images/point.png',
                                 text: 'Rongsok\nPoint',
-                                amount: (snapshot.data as dynamic)["poin"].toString(),
+                                amount: (snapshot.data as dynamic)["poin"]
+                                    .toString(),
                               ),
                             ],
                           ),
@@ -242,6 +213,34 @@ class _HomeState extends State<Home> {
                       date: '27 Agustus 2021',
                     ),
                     SizedBox(height: 50),
+                    isSwitched ? StreamBuilder(
+                      stream: FirebaseFirestore.instance
+                        .collection("requests")
+                        .where("diambil", isEqualTo: false)
+                        .snapshots(),
+                      builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                        if(snapshot.hasData) {
+                          return ListView.builder(
+                            scrollDirection: Axis.vertical,
+                            shrinkWrap: true,
+                            itemCount: snapshot.data!.docs.length,
+                            itemBuilder: (context, index) {
+                              DocumentSnapshot docSnapshot = snapshot.data!.docs[index];
+                              if(tolakRequests.contains(docSnapshot["documentId"])) {
+                                print('sudah diabaikan pengepul');
+                              } else {
+                                  return ShowRequestDialog(
+                                    idDocument: docSnapshot["documentId"],
+                                    index: index,
+                                  );
+                              }
+                              return Container();
+                            },
+                          );
+                        }
+                        return Container();
+                      }
+                    ) : Container()
                   ],
                 );
               }
@@ -378,6 +377,53 @@ class ProfileContent extends StatelessWidget {
           textAlign: TextAlign.center,
           style: TextStyle(fontFamily: 'Montserrat', fontSize: 13),
         )
+      ],
+    );
+  }
+}
+
+class ShowRequestDialog extends StatefulWidget {
+  final String idDocument;
+  final int index;
+  const ShowRequestDialog({
+    Key? key, required this.idDocument, 
+    required this.index,
+  }) : super(key: key);
+
+  @override
+  _ShowRequestDialogState createState() => _ShowRequestDialogState();
+}
+
+class _ShowRequestDialogState extends State<ShowRequestDialog> {
+  
+  void newOrder() {
+    Future.delayed(Duration.zero, () async {
+      return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return RequestNotification(
+            idDocument: widget.idDocument,
+            context: context,
+            tolakRequests: tolakRequests,
+            press: () {},
+          );
+        },
+      ); 
+    });
+  } 
+  
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      newOrder();
+    });
+  }
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Container()
       ],
     );
   }
