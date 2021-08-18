@@ -36,9 +36,26 @@ class DatabaseService {
     });
   }
 
+  //update request
+  Future updateRequest(List<Map<String, dynamic>> listBarang, String documentId, num total) async{
+    print(listBarang);
+    return await db.collection('requests').doc(documentId).update({
+      'total' : total,
+      'listBarang' : [
+        for (var i = 0; i < listBarang.length; i++) {
+          'check' : listBarang[i]["check"],
+          'harga' : listBarang[i]["harga"],
+          'berat' : listBarang[i]["berat"],
+          'kategori' : listBarang[i]["kategori"],
+          'namaBarang' : listBarang[i]["namaBarang"],
+          'deskripsi' : listBarang[i]["deskripsi"],
+          'fotoBarang' : listBarang[i]["fotoBarang"],
+        }
+      ],
+    });
+  }
+
   Future<DocumentSnapshot> getUsers(String id) async {
     return await db.collection("userPengepul").doc(id).get();
-    // final userData = await db.collection("userPengepul").doc(id).snapshots();
-    // return userData;
   }
 }

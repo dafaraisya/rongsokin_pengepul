@@ -11,6 +11,7 @@ import 'package:rongsokin_pengepul/enums.dart';
 
 List<String> tolakRequests = [];
 bool isSwitched = false;
+String statusPengepul = 'Pengepul Tidak Aktif';
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
 
@@ -50,7 +51,7 @@ class _HomeState extends State<Home> {
               children: [
                 Spacer(),
                 Text(
-                  'PENGEPUL AKTIF',
+                  statusPengepul,
                   style: TextStyle(
                     color: Colors.white,
                     fontFamily: 'Montserrat',
@@ -63,7 +64,12 @@ class _HomeState extends State<Home> {
                   value: isSwitched,
                   onChanged: (value) {
                     setState(() {
-                      isSwitched = value;                
+                      isSwitched = value;      
+                      if(isSwitched == false ){
+                        statusPengepul = 'Pengepul Tidak Aktif';
+                      } else {
+                        statusPengepul = 'Pengepul Aktif';
+                      }          
                     });
                   },
                   activeTrackColor: Colors.grey[300],
@@ -230,7 +236,7 @@ class _HomeState extends State<Home> {
                                 print('sudah diabaikan pengepul');
                               } else {
                                   return ShowRequestDialog(
-                                    idDocument: docSnapshot["documentId"],
+                                    documentId: docSnapshot["documentId"],
                                     index: index,
                                   );
                               }
@@ -383,10 +389,10 @@ class ProfileContent extends StatelessWidget {
 }
 
 class ShowRequestDialog extends StatefulWidget {
-  final String idDocument;
+  final String documentId;
   final int index;
   const ShowRequestDialog({
-    Key? key, required this.idDocument, 
+    Key? key, required this.documentId, 
     required this.index,
   }) : super(key: key);
 
@@ -402,7 +408,7 @@ class _ShowRequestDialogState extends State<ShowRequestDialog> {
         context: context,
         builder: (BuildContext context) {
           return RequestNotification(
-            idDocument: widget.idDocument,
+            documentId: widget.documentId,
             context: context,
             tolakRequests: tolakRequests,
             press: () {},

@@ -1,23 +1,44 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:rongsokin_pengepul/components/default_appBar.dart';
 import 'package:rongsokin_pengepul/components/default_navBar.dart';
 import 'package:intl/intl.dart';
 import 'package:rongsokin_pengepul/enums.dart';
+import 'package:rongsokin_pengepul/screens/transaction/final_transaction.dart';
+import 'package:rongsokin_pengepul/services/database.dart';
 
+num total = 0;
+typedef TotalCallback = void Function(num tot);
+var currency = new NumberFormat.simpleCurrency(locale: 'id_ID');
+List<Map<String, dynamic>> listBarang = [];
+num? countTotal() {
+  total = 0;
+  for (var i = 0; i < listBarang.length; i++) {
+    if (listBarang[i]["harga"] != null) {
+      total += listBarang[i]["harga"];
+    }
+  }
+  return total;
+}
 class ConfirmationPickUp extends StatefulWidget {
   const ConfirmationPickUp({
     Key? key, 
-    required this.idDocument
+    required this.documentId,
+    required this.userId,
+    required this.location,
   }) : super(key: key);
 
-  final String idDocument;
+  final String documentId;
+  final String userId;
+  final String location;
 
   @override
   _ConfirmationPickUpState createState() => _ConfirmationPickUpState();
 }
 
 class _ConfirmationPickUpState extends State<ConfirmationPickUp> {
+  num total = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,7 +46,19 @@ class _ConfirmationPickUpState extends State<ConfirmationPickUp> {
       bottomNavigationBar: DefaultNavBar(selectedMenu: MenuState.transaction,),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: InkWell(
-        onTap: () {},
+        onTap: () async{
+          final user = FirebaseAuth.instance.currentUser != null ? FirebaseAuth.instance.currentUser : null;
+          for(var i = 0; i < listBarang.length; i++) {
+            if (listBarang[i]['check'] == false) {
+              listBarang.removeAt(i);
+              print(listBarang);
+            }
+          }
+          await DatabaseService(uid: user?.uid ?? null).updateRequest(listBarang, widget.documentId, total);
+          Navigator.of(context).push(MaterialPageRoute(builder: (_) {
+            return FinalTransaction(documentId: widget.documentId,total: total, userId: widget.userId, location: widget.location,);
+          }));
+        },
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 20),
           child: Container(
@@ -40,7 +73,6 @@ class _ConfirmationPickUpState extends State<ConfirmationPickUp> {
                 'Ambil Sekarang',
                 style: TextStyle(
                   color: Color(0xFF1D438A),
-                  
                   fontSize: 22,
                 ),
               ),
@@ -60,7 +92,6 @@ class _ConfirmationPickUpState extends State<ConfirmationPickUp> {
                 'DETAIL USER',
                 style: TextStyle(
                   color: Color(0xFF163570),
-                  
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
@@ -70,68 +101,81 @@ class _ConfirmationPickUpState extends State<ConfirmationPickUp> {
               Stack(
                 alignment: Alignment.center,
                 children: [
-                  Container(
-                    height: 120,
-                    decoration: BoxDecoration(
-                      color: Color(0xFFFFC233),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.only(
-                          left: 40, right: 40, top: 20, bottom: 15),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'Pasha Ungu',
-                                style: TextStyle(                                 
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Icon(
-                                    Icons.phone,
-                                    size: 26,
-                                  ),
-                                  SizedBox(width: 3),
-                                  Text(
-                                    '+6281658737356',
-                                    style: TextStyle(                                     
-                                      fontSize: 16,
+                  StreamBuilder(
+                    stream: FirebaseFirestore.instance
+                      .collection('users')
+                      .doc(widget.userId)
+                      .snapshots(),
+                    builder: (context, snapshot) {
+                      if(snapshot.hasData) {
+                        return Container(
+                          height: 120,
+                          decoration: BoxDecoration(
+                            color: Color(0xFFFFC233),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.only(
+                                left: 40, right: 40, top: 20, bottom: 15),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      (snapshot.data as dynamic)["username"],
+                                      style: TextStyle(                                 
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
-                                  ),
-                                ],
-                              )
-                            ],
-                          ),
-                          Spacer(),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.location_on,
-                                size: 27,
-                              ),
-                              SizedBox(width: 7),
-                              Flexible(
-                                child: Text(
-                                  'Jl. Teknik Kimia, Keputih, Kec. Sukolilo, Kota SBY, Jawa Timur 60111',
-                                  style: TextStyle(                                  
-                                    fontSize: 14,
-                                  ),
+                                    Row(
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        Icon(
+                                          Icons.phone,
+                                          size: 26,
+                                        ),
+                                        SizedBox(width: 3),
+                                        Text(
+                                          (snapshot.data as dynamic)["phoneNumber"],
+                                          style: TextStyle(                                     
+                                            fontSize: 16,
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                  ],
                                 ),
-                              )
-                            ],
+                                Spacer(),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.location_on,
+                                      size: 27,
+                                    ),
+                                    SizedBox(width: 7),
+                                    Flexible(
+                                      child: Text(
+                                        widget.location,
+                                        style: TextStyle(                                  
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
-                        ],
-                      ),
-                    ),
+                        );
+                      }
+                      return Center(
+                        child: Text('Loading...'),
+                      );
+                    }
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -157,7 +201,7 @@ class _ConfirmationPickUpState extends State<ConfirmationPickUp> {
                 child: StreamBuilder(
                   stream: FirebaseFirestore.instance
                     .collection("requests")
-                    .doc(widget.idDocument)
+                    .doc(widget.documentId)
                     .snapshots(),
                   builder: (context, snapshot) {
                     if(snapshot.hasData) {
@@ -167,10 +211,19 @@ class _ConfirmationPickUpState extends State<ConfirmationPickUp> {
                         itemCount: (snapshot.data as dynamic)["listBarang"].length,
                         itemBuilder: (context, index) {
                           return ItemListCard(
+                            index : index,
+                            kategori : (snapshot.data as dynamic)["listBarang"][index]["kategori"],
                             namaBarang: (snapshot.data as dynamic)["listBarang"][index]["namaBarang"],
                             deskripsi: (snapshot.data as dynamic)["listBarang"][index]["deskripsi"],
                             harga: (snapshot.data as dynamic)["listBarang"][index]["harga"],
+                            hargaPerItem: (snapshot.data as dynamic)["listBarang"][index]["hargaPerItem"],
                             berat: (snapshot.data as dynamic)["listBarang"][index]["berat"],
+                            fotoBarang : (snapshot.data as dynamic)["listBarang"][index]["fotoBarang"],
+                            total: (num tot) {
+                              setState(() {
+                                total = tot;
+                              });
+                            }
                           );
                         },
                       );
@@ -180,6 +233,28 @@ class _ConfirmationPickUpState extends State<ConfirmationPickUp> {
                       child: Text('Loading...'),
                     );
                   },
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 25),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Total :',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      '${currency.format(total)}',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
@@ -193,31 +268,50 @@ class _ConfirmationPickUpState extends State<ConfirmationPickUp> {
 class ItemListCard extends StatefulWidget {
   const ItemListCard({
     Key? key,
+    required this.index,
+    required this.kategori,
     required this.namaBarang,
     required this.deskripsi,
     required this.berat,
     required this.harga,
+    required this.hargaPerItem,
+    required this.fotoBarang,
+    required this.total
   }) : super(key: key);
 
+  final int index;
+  final String kategori;
   final String namaBarang;
   final String deskripsi;
   final int berat;
   final int harga;
+  final int hargaPerItem;
+  final String fotoBarang;
+  final TotalCallback total;
 
   @override
   _ItemListCardState createState() => _ItemListCardState();
 }
 
 class _ItemListCardState extends State<ItemListCard> {
-  bool _isChecked = true;
-  int price = 10000;
+  bool _isChecked = false;
+  int price = 1;
   int weight = 1;
+  int maxWeight = 1;
+  @override
+  void initState() {
+    listBarang.add({
+      'check' : false
+    });
+    price = widget.harga;
+    weight = widget.berat;
+    maxWeight = weight;
+    super.initState();
+  }
   var currency = new NumberFormat.simpleCurrency(locale: 'id_ID');
 
   @override
   Widget build(BuildContext context) {
-    price = widget.harga;
-    weight = widget.berat;
     return Card(
       elevation: 6,
       shape: RoundedRectangleBorder(
@@ -233,6 +327,29 @@ class _ItemListCardState extends State<ItemListCard> {
             onChanged: (bool? value) {
               setState(() {
                 _isChecked = value!;
+                if(_isChecked) {
+                  listBarang[widget.index] = {
+                    'check' : _isChecked,
+                    'kategori': widget.kategori,
+                    'namaBarang': widget.namaBarang,
+                    'deskripsi': widget.deskripsi,
+                    'harga': widget.hargaPerItem * weight,
+                    'berat': weight,
+                    'fotoBarang': widget.fotoBarang
+                  };
+                  widget.total(countTotal()!);
+                } else {
+                  listBarang[widget.index] = {
+                    'check' : _isChecked,
+                    'kategori': widget.kategori,
+                    'namaBarang': widget.namaBarang,
+                    'deskripsi': widget.deskripsi,
+                    'harga': 0,
+                    'berat': weight,
+                    'fotoBarang': widget.fotoBarang
+                  };
+                  widget.total(countTotal()!);
+                }
               });
             },
           ),
@@ -268,7 +385,19 @@ class _ItemListCardState extends State<ItemListCard> {
                     InkWell(
                       onTap: () {
                         setState(() {
-                          weight <= 1 ? 1 : weight--;
+                          if(_isChecked) {
+                            weight <= 1 ? 1 : weight--;
+                            listBarang[widget.index] = {
+                              'check' : _isChecked,
+                              'kategori': widget.kategori,
+                              'namaBarang': widget.namaBarang,
+                              'deskripsi': widget.deskripsi,
+                              'harga': widget.hargaPerItem * weight,
+                              'berat': weight,
+                              'fotoBarang': widget.fotoBarang
+                            };
+                            widget.total(countTotal()!);
+                          }
                         });
                       },
                       child: Container(
@@ -291,7 +420,19 @@ class _ItemListCardState extends State<ItemListCard> {
                     InkWell(
                       onTap: () {
                         setState(() {
-                          weight++;
+                          if(_isChecked) {
+                            weight >= maxWeight ? weight : weight++;
+                            listBarang[widget.index] = {
+                              'check' : _isChecked,
+                              'kategori': widget.kategori,
+                              'namaBarang': widget.namaBarang,
+                              'deskripsi': widget.deskripsi,
+                              'harga': widget.hargaPerItem * weight,
+                              'berat': weight,
+                              'fotoBarang': widget.fotoBarang
+                            };
+                            widget.total(countTotal()!);
+                          }
                         });
                       },
                       child: Container(
