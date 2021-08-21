@@ -14,7 +14,9 @@ class FailedScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        backgroundColor: kPrimaryColor,
+      ),
       body: Padding(
         padding: EdgeInsets.all(20),
         child: Column(

@@ -1,8 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-// import 'package:provider/provider.dart';
+import 'package:provider/provider.dart';
+import 'package:rongsokin_pengepul/models/user_pengepul.dart';
 import 'package:rongsokin_pengepul/screens/home/home.dart';
 import 'package:rongsokin_pengepul/screens/sign_in/sign_in.dart';
+import 'package:rongsokin_pengepul/screens/transaction/confirmation_pickup.dart';
 // import 'package:rongsokin_pengepul/screens/transaction/confirmation_pickup.dart';
 
 class Wrapper extends StatelessWidget {
@@ -10,21 +12,36 @@ class Wrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: StreamBuilder(
-        stream: FirebaseAuth.instance.authStateChanges(),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return Center(
-              child: Text('Something went error'),
-            );
-          } else if (snapshot.hasData) {
-            return Home();
-          } else {
-            return SignIn();
-          }
-        },
-      ),
-    );
+    final user = Provider.of<UserPengepul?>(context);
+    if(user == null) {
+      return Scaffold(
+        body: SignIn(),
+      );
+    } else {
+      return Scaffold(
+        body: Home(),
+      );
+    }
+    // return Scaffold(
+    //   body: StreamBuilder(
+    //     stream: FirebaseAuth.instance.authStateChanges(),
+    //     builder: (context, snapshot) {
+    //       if (snapshot.hasError) {
+    //         return Center(
+    //           child: Text('Something went error'),
+    //         );
+    //       } else if (snapshot.hasData) {
+    //         return Home();
+    //         // return ConfirmationPickUp(
+    //         //   documentId: '19', 
+    //         //   userId: 'WYAIVuJiDfWU8isZQVEFzLZCP9i2',
+    //         //   location: 'kendal'
+    //         // );
+    //       } else {
+    //         return SignIn();
+    //       }
+    //     },
+    //   ),
+    // );
   }
 }

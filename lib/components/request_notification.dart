@@ -10,13 +10,11 @@ class RequestNotification extends StatelessWidget {
     Key? key,
     required this.documentId,
     required this.context,
-    required this.press,
     required this.tolakRequests,
   }) : super(key: key);
 
   final String documentId;
   final BuildContext context;
-  final VoidCallback? press;
   final List<String> tolakRequests;
 
   @override
@@ -111,7 +109,6 @@ class RequestNotification extends StatelessWidget {
                                   Text((snapshot.data as dynamic)["listBarang"][index]["berat"].toString())
                                 ],
                               )
-                              
                             ],
                           );
                         },
@@ -127,12 +124,7 @@ class RequestNotification extends StatelessWidget {
                       InkWell(
                         onTap: () async{
                           tolakRequests.add(documentId);
-                          dynamic result = await _auth.updateTolakRequests(tolakRequests);
-                          if(result == null) {
-                            Navigator.of(context).push(MaterialPageRoute(builder: (_){
-                              return FailedScreen(message: 'Opps Order sudah diambl\noleh Pengepul Lain');
-                            }));
-                          }
+                          await _auth.updateTolakRequests(tolakRequests);
                           Navigator.pop(context);
                         },
                         child: Container(
@@ -154,9 +146,16 @@ class RequestNotification extends StatelessWidget {
                       InkWell(
                         onTap: () async{
                           dynamic result = await _auth.updateTerimaRequests(documentId);
-                          if(result == null) {
-                            print('sudah diambil');
-                          } else {
+                          if(result == 'sudah diambil') {
+                            Navigator.of(context).push(MaterialPageRoute(builder: (_){
+                              return FailedScreen(message: 'Opps Order sudah diambil\noleh Pengepul Lain');
+                            }));
+                          } else if(result == 'dibatalkan') {
+                            Navigator.of(context).push(MaterialPageRoute(builder: (_){
+                              return FailedScreen(message: 'Opps Order sudah dibatalkan\noleh user');
+                            }));
+                          }  
+                          else {
                             Navigator.of(context).push(MaterialPageRoute(builder: (_) {
                               return ConfirmationPickUp(
                                 documentId: documentId, 

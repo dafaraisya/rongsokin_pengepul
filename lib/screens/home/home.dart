@@ -2,12 +2,16 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:rongsokin_pengepul/components/default_appBar.dart';
 import 'package:rongsokin_pengepul/components/default_navBar.dart';
 import 'package:rongsokin_pengepul/components/request_notification.dart';
 import 'package:rongsokin_pengepul/constant.dart';
 import 'package:rongsokin_pengepul/enums.dart';
+import 'package:rongsokin_pengepul/models/user_pengepul.dart';
+import 'package:rongsokin_pengepul/screens/history/recent_history_list.dart';
 
 List<String> tolakRequests = [];
 bool isSwitched = false;
@@ -24,15 +28,12 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     //get data user from firebase
-    final user = FirebaseAuth.instance.currentUser != null
-        ? FirebaseAuth.instance.currentUser
-        : null;
+    final user = Provider.of<UserPengepul?>(context);
     var db = FirebaseFirestore.instance;
-    final dataProfileUser =
-        db.collection("usersPengepul").doc(user?.uid ?? null).snapshots();
+    final dataProfileUser = db.collection("usersPengepul").doc(user!.uid).snapshots();
 
     return Scaffold(
-      appBar: DefaultAppBar(),
+      appBar: DefaultAppBar(backButton: false,),
       bottomNavigationBar: DefaultNavBar(selectedMenu: MenuState.home),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: Padding(
@@ -60,7 +61,7 @@ class _HomeState extends State<Home> {
                   ),
                 ),
                 Spacer(),
-                Switch(
+                CupertinoSwitch(
                   value: isSwitched,
                   onChanged: (value) {
                     setState(() {
@@ -72,8 +73,8 @@ class _HomeState extends State<Home> {
                       }          
                     });
                   },
-                  activeTrackColor: Colors.grey[300],
-                  activeColor: kPrimaryColor,
+                  trackColor: Colors.grey[300],
+                  activeColor: Colors.green,
                 ),
                 Spacer()
               ],
@@ -82,9 +83,10 @@ class _HomeState extends State<Home> {
         ),
       ),
       body: SingleChildScrollView(
+        physics: ScrollPhysics(),
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 20),
-          child: user == null ? Container() : StreamBuilder(
+          child: StreamBuilder(
             stream: dataProfileUser,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
@@ -168,14 +170,12 @@ class _HomeState extends State<Home> {
                                 asset: 'assets/images/rating.png',
                                 text: 'Rating',
                                 amount:
-                                    (snapshot.data as dynamic)["rating"]
-                                        .toString(),
+                                    (snapshot.data as dynamic)["rating"].toStringAsFixed(1),
                               ),
                               ProfileContent(
                                 asset: 'assets/images/point.png',
                                 text: 'Rongsok\nPoint',
-                                amount: (snapshot.data as dynamic)["poin"]
-                                    .toString(),
+                                amount: (snapshot.data as dynamic)["poin"].toString()
                               ),
                             ],
                           ),
@@ -197,28 +197,55 @@ class _HomeState extends State<Home> {
                     ),
                     SizedBox(height: 5),
                     // Class HistoryContent ada di bawah
-                    HistoryContent(
-                      name: 'Nisa Sabyan',
-                      weight: 2,
-                      address: 'Jl Panderman Gang 5',
-                      price: 'Rp100.000,00',
-                      date: '27 Agustus 2021',
-                    ),
-                    HistoryContent(
-                      name: 'Nisa Sabyan',
-                      weight: 2,
-                      address: 'Jl Panderman Gang 5',
-                      price: 'Rp100.000,00',
-                      date: '27 Agustus 2021',
-                    ),
-                    HistoryContent(
-                      name: 'Nisa Sabyan',
-                      weight: 2,
-                      address: 'Jl Panderman Gang 5',
-                      price: 'Rp100.000,00',
-                      date: '27 Agustus 2021',
-                    ),
-                    SizedBox(height: 50),
+                    RecentHistorylist(),
+                    // ListView.builder(
+                    //   physics: NeverScrollableScrollPhysics(),
+                    //   shrinkWrap: true,
+                    //   itemCount: (snapshot.data as dynamic)["historyTransactions"].length,
+                    //   itemBuilder: (context, index) {
+                    //     if((snapshot.data as dynamic)["historyTransactions"].length > 0) {
+                    //       return HistoryContent(
+                    //         name: (snapshot.data as dynamic)["username"], 
+                    //         weight: 0, 
+                    //         address: 'lala', 
+                    //         price: 'lala', 
+                    //         date: 'lalal'
+                    //       );  
+                    //     } 
+                    //     return Center(
+                    //       child: Text('Loading...'),
+                    //     );
+                    //   },
+                    // ),
+                    // HistoryContent(
+                    //   name: 'Nisa Sabyan',
+                    //   weight: 2,
+                    //   address: 'Jl Panderman Gang 5',
+                    //   price: 'Rp100.000,00',
+                    //   date: '27 Agustus 2021',
+                    // ),
+                    // HistoryContent(
+                    //   name: 'Nisa Sabyan',
+                    //   weight: 2,
+                    //   address: 'Jl Panderman Gang 5',
+                    //   price: 'Rp100.000,00',
+                    //   date: '27 Agustus 2021',
+                    // ),
+                    // HistoryContent(
+                    //   name: 'Nisa Sabyan',
+                    //   weight: 2,
+                    //   address: 'Jl Panderman Gang 5',
+                    //   price: 'Rp100.000,00',
+                    //   date: '27 Agustus 2021',
+                    // ),
+                    // HistoryContent(
+                    //   name: 'Nisa Sabyan',
+                    //   weight: 2,
+                    //   address: 'Jl Panderman Gang 5',
+                    //   price: 'Rp100.000,00',
+                    //   date: '27 Agustus 2021',
+                    // ),
+                    SizedBox(height: 100),
                     isSwitched ? StreamBuilder(
                       stream: FirebaseFirestore.instance
                         .collection("requests")
@@ -233,14 +260,15 @@ class _HomeState extends State<Home> {
                             itemBuilder: (context, index) {
                               DocumentSnapshot docSnapshot = snapshot.data!.docs[index];
                               if(tolakRequests.contains(docSnapshot["documentId"])) {
-                                print('sudah diabaikan pengepul');
+                                return Container();
+                              } else if(docSnapshot["dibatalkan"]) {
+                                return Container();
                               } else {
                                   return ShowRequestDialog(
                                     documentId: docSnapshot["documentId"],
                                     index: index,
                                   );
                               }
-                              return Container();
                             },
                           );
                         }
@@ -254,97 +282,6 @@ class _HomeState extends State<Home> {
                 child: Text('Loading...'),
               );
             }
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class HistoryContent extends StatelessWidget {
-  final String name;
-  final int weight;
-  final String address;
-  final String price;
-  final String date;
-
-  HistoryContent({
-    required this.name,
-    required this.weight,
-    required this.address,
-    required this.price,
-    required this.date,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 100,
-      child: Card(
-        elevation: 6,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    name,
-                    style: TextStyle(
-                      color: Color(0xFF163570),
-                      fontFamily: 'Montserrat',
-                      fontSize: 20,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  SizedBox(height: 3),
-                  Text(
-                    'Berat : ' + weight.toString() + ' Kg',
-                    style: TextStyle(
-                      fontFamily: 'Montserrat',
-                      fontSize: 13,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  SizedBox(height: 4),
-                  Text(
-                    address,
-                    style: TextStyle(
-                      fontFamily: 'Montserrat',
-                      fontSize: 13,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
-              ),
-              Column(
-                children: [
-                  Text(
-                    price,
-                    style: TextStyle(
-                      fontFamily: 'Montserrat',
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  SizedBox(height: 3),
-                  Text(
-                    date,
-                    style: TextStyle(
-                      fontFamily: 'Montserrat',
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                      fontStyle: FontStyle.italic,
-                    ),
-                  ),
-                ],
-              )
-            ],
           ),
         ),
       ),
@@ -411,7 +348,6 @@ class _ShowRequestDialogState extends State<ShowRequestDialog> {
             documentId: widget.documentId,
             context: context,
             tolakRequests: tolakRequests,
-            press: () {},
           );
         },
       ); 

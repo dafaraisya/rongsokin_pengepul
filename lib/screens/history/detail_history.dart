@@ -1,38 +1,24 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:rongsokin_pengepul/components/default_appBar.dart';
-import 'package:intl/intl.dart';
-import 'package:rongsokin_pengepul/models/user_pengepul.dart';
-import 'package:rongsokin_pengepul/screens/home/home.dart';
-import 'package:rongsokin_pengepul/services/database.dart';
+import 'package:rongsokin_pengepul/constant.dart';
 
-var currency = new NumberFormat.simpleCurrency(locale: 'id_ID');
-class FinalTransaction extends StatefulWidget {
-  const FinalTransaction({
-    Key? key, 
+class DetailHistory extends StatelessWidget {
+  const DetailHistory({ 
+    Key? key,
     required this.documentId,
-    required this.total,
     required this.userId,
-    required this.location
+    required this.total
   }) : super(key: key);
 
   final String documentId;
   final String userId;
-  final String location;
   final num total;
 
   @override
-  _FinalTransactionState createState() => _FinalTransactionState();
-}
-
-class _FinalTransactionState extends State<FinalTransaction> {
-  @override
   Widget build(BuildContext context) {
-    final user = Provider.of<UserPengepul?>(context);
     return Scaffold(
-      appBar: DefaultAppBar(backButton: false,),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      appBar: DefaultAppBar(backButton: true),
       body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 20),
@@ -40,38 +26,6 @@ class _FinalTransactionState extends State<FinalTransaction> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              StreamBuilder(
-                stream: FirebaseFirestore.instance
-                  .collection('requests')
-                  .doc(widget.documentId)
-                  .snapshots(),
-                builder: (context, snapshot) {
-                  if(snapshot.hasData) {
-                    print((snapshot.data as dynamic)['selesai']);
-                    if((snapshot.data as dynamic)['selesai'] == true) {
-                      WidgetsBinding.instance!.addPostFrameCallback(
-                        (_) => Navigator.push(context,
-                          MaterialPageRoute(
-                            builder: (context) => Home(),
-                          ),
-                        ),
-                      );                      
-                    }
-                  }
-                  // if((snapshot.data as dynamic)["selesai"]) {
-                  //   WidgetsBinding.instance!.addPostFrameCallback(
-                  //     (_) => Navigator.push(context,
-                  //       MaterialPageRoute(
-                  //         builder: (context) => Home(),
-                  //       ),
-                  //     ),
-                  //   );
-                  // } else {
-                  //   return Container();
-                  // }
-                  return Container();
-                }
-              ),
               // Detail User Text
               Text(
                 'DETAIL USER',
@@ -83,93 +37,67 @@ class _FinalTransactionState extends State<FinalTransaction> {
               ),
               SizedBox(height: 10),
               //Detail User Container
-              Stack(
-                alignment: Alignment.center,
-                children: [
-                  StreamBuilder(
-                    stream: FirebaseFirestore.instance
-                      .collection('users')
-                      .doc(widget.userId)
-                      .snapshots(),
-                    builder: (context, snapshot) {
-                      if(snapshot.hasData) {
-                        return  Container(
-                          height: 120,
-                          decoration: BoxDecoration(
-                            color: Color(0xFFFFC233),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.only(
-                                left: 40, right: 40, top: 20, bottom: 15),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      (snapshot.data as dynamic)["username"],
-                                      style: TextStyle(                                 
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    Row(
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      children: [
-                                        Icon(
-                                          Icons.phone,
-                                          size: 26,
-                                        ),
-                                        SizedBox(width: 3),
-                                        Text(
-                                          (snapshot.data as dynamic)["phoneNumber"],
-                                          style: TextStyle(                                     
-                                            fontSize: 16,
-                                          ),
-                                        ),
-                                      ],
-                                    )
-                                  ],
-                                ),
-                                Spacer(),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Icon(
-                                      Icons.location_on,
-                                      size: 27,
-                                    ),
-                                    SizedBox(width: 7),
-                                    Flexible(
-                                      child: Text(
-                                        widget.location,
-                                        style: TextStyle(                                  
-                                          fontSize: 14,
-                                        ),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ],
+              StreamBuilder(
+                stream: FirebaseFirestore.instance
+                  .collection('users')
+                  .doc(userId)
+                  .snapshots(),
+                builder: (context, snapshot) {
+                  if(snapshot.hasData) {
+                    return Card(
+                      elevation: 6,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(vertical: 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              height: 80,
+                              width: 80,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                image: DecorationImage(
+                                  image: AssetImage('assets/images/profile_image.png'),
+                                  fit: BoxFit.cover,
+                                )),
                             ),
-                          ),
-                        );
-                      }
-                      return Center(
-                        child: Text('Loading...'),
-                      );
-                    }
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: Container(
-                      height: 2,
-                      color: Colors.white,
-                    ),
-                  ),
-                ],
+                            SizedBox(width: 20),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    (snapshot.data as dynamic)["username"],
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                  Text(
+                                    (snapshot.data as dynamic)["phoneNumber"],
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 2,
+                                    textAlign: TextAlign.justify,
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 14,
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  }
+                  return Center(
+                    child: Text('Loading...'),
+                  );
+                }
               ),
               SizedBox(height: 20),
               Text(
@@ -188,20 +116,10 @@ class _FinalTransactionState extends State<FinalTransaction> {
                     child: StreamBuilder(
                       stream: FirebaseFirestore.instance
                         .collection("requests")
-                        .doc(widget.documentId)
+                        .doc(documentId)
                         .snapshots(),
                       builder: (context, snapshot) {
                         if(snapshot.hasData) {
-                          if((snapshot.data as dynamic)["selesai"]){
-                            DatabaseService(uid: user!.uid).addPoint(widget.total);
-                            WidgetsBinding.instance!.addPostFrameCallback(
-                              (_) => Navigator.pushReplacement(context,
-                                MaterialPageRoute(
-                                  builder: (context) => Home(),
-                                ),
-                              ),
-                            );
-                          }
                           return ListView.builder(
                             scrollDirection: Axis.vertical,
                             shrinkWrap: true,
@@ -242,7 +160,7 @@ class _FinalTransactionState extends State<FinalTransaction> {
                       ),
                     ),
                     Text(
-                      '${currency.format(widget.total)}',
+                      '${currency.format(total)}',
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -286,7 +204,6 @@ class ItemListCard extends StatefulWidget {
 }
 
 class _ItemListCardState extends State<ItemListCard> {
-  var currency = new NumberFormat.simpleCurrency(locale: 'id_ID');
 
   @override
   Widget build(BuildContext context) {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 const kPrimaryColor = Color(0XFF14213D);
 const kSecondaryColor = Color(0XFFFFC233);
@@ -19,3 +20,4 @@ const kParagraphText = TextStyle(
   fontSize: 14,
   fontFamily: 'Montserrat Regular'
 );
+var currency = new NumberFormat.simpleCurrency(locale: 'id_ID');

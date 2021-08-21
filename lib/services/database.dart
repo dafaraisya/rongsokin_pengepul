@@ -17,6 +17,7 @@ class DatabaseService {
       'address' : address,
       'birthDate' : birthDate,
       'phoneNumber' : phoneNumber,
+      'historyTransactions' : [],
       'totalTransaction' : 0,
       'rating' : 0.0,
       'poin' : 0
@@ -24,9 +25,22 @@ class DatabaseService {
   }
 
   Future updateTerimaRequests(String idDocument) async {
-    db.collection("requests").doc(idDocument).update({
+    DocumentSnapshot documentUserPengepul = await FirebaseFirestore.instance.collection('usersPengepul').doc(uid).get(); 
+    dynamic jsonUserPengepul = documentUserPengepul.data();
+    List<String> historyTransactions = [];
+    await db.collection("requests").doc(idDocument).update({
       'diambil' : true,
-      'userPengepulId' : uid 
+      'userPengepulId' : uid,
+      'namaUserPengepul' : jsonUserPengepul['username']
+    });
+    
+    for (var i = 0; i < jsonUserPengepul["historyTransactions"].length; i++) {
+      historyTransactions.add(jsonUserPengepul["historyTransactions"][i]);
+    }
+    historyTransactions.add(idDocument);
+    await db.collection("usersPengepul").doc(uid).update({
+      'historyTransactions' : historyTransactions,
+      'totalTransaction' : jsonUserPengepul["totalTransaction"]+1
     });
   }
 
@@ -45,6 +59,7 @@ class DatabaseService {
         for (var i = 0; i < listBarang.length; i++) {
           'check' : listBarang[i]["check"],
           'harga' : listBarang[i]["harga"],
+          'hargaPerItem' : listBarang[i]["hargaPerItem"],
           'berat' : listBarang[i]["berat"],
           'kategori' : listBarang[i]["kategori"],
           'namaBarang' : listBarang[i]["namaBarang"],
@@ -52,6 +67,18 @@ class DatabaseService {
           'fotoBarang' : listBarang[i]["fotoBarang"],
         }
       ],
+    });
+  }
+
+  // tambah point
+  Future addPoint(num total) async{
+    //ambil data poin user
+    DocumentSnapshot documentUserPengepul = await FirebaseFirestore.instance.collection('usersPengepul').doc(uid).get(); 
+    dynamic jsonUserPengepul = documentUserPengepul.data();
+
+    //tambah poin
+    await db.collection('usersPengepul').doc(uid).update({
+      'poin' : jsonUserPengepul["poin"]+(total~/10) 
     });
   }
 

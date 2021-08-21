@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:rongsokin_pengepul/models/user_pengepul.dart';
 import 'package:rongsokin_pengepul/services/database.dart';
 
 class AuthService extends ChangeNotifier {
@@ -37,7 +38,7 @@ class AuthService extends ChangeNotifier {
       UserCredential authResult = await firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
       User user = authResult.user!;
       setLoading(false);
-      return user;
+      return _userPengepul(user);
     } on SocketException {
       print('problem with your internet connection');
       setLoading(false);
@@ -46,6 +47,11 @@ class AuthService extends ChangeNotifier {
       setLoading(false);
     }
     notifyListeners(); 
+  }
+
+  //buat user objek dari data user firebase
+  UserPengepul? _userPengepul(User? user) {
+    return user != null ? UserPengepul(uid: user.uid) : null;
   }
 
   Future signOut() async {
@@ -60,12 +66,14 @@ class AuthService extends ChangeNotifier {
     try{
       DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance.collection('requests').doc(idDocument).get(); 
       dynamic jsonDocument = documentSnapshot.data();
-      if(jsonDocument['diambil'] == false ) {
+      if(jsonDocument['diambil'] == false && jsonDocument['dibatalkan'] == false) {
         final user = FirebaseAuth.instance.currentUser != null ? FirebaseAuth.instance.currentUser : null;
         await DatabaseService(uid: user?.uid ?? null).updateTerimaRequests(idDocument);
         return user;
-      } else {
-        return null;
+      } else if(jsonDocument['diambil'] == true) {
+        return 'sudah diambil';
+      } else if(jsonDocument['dibatalkan'] == true) {
+        return 'dibatalkan';
       }
     }catch(e){
       print(e.toString());
@@ -87,6 +95,8 @@ class AuthService extends ChangeNotifier {
     notifyListeners();
   }
   
-  Stream<User> get user => firebaseAuth.authStateChanges().map((event) => event!);
+  // Stream<UserPengepul> get user => firebaseAuth.authStateChanges().map((User? user) => _userPengepul(user)!);
+  Stream<UserPengepul?> get user => firebaseAuth.authStateChanges().map(_userPengepul);
+  // Stream<User> get user => firebaseAuth.authStateChanges().map((event) => event!);
 
 }
