@@ -103,7 +103,7 @@ class _SignUpState extends State<SignUp> {
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                       labelText: "Password",
                       labelStyle: TextStyle(fontSize: 20, color: kPrimaryColor),
-                      hintText: "Masukkan password anda",
+                      hintText: "Password min. 6 karakter",
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(15.0),
                         borderSide: BorderSide(

@@ -22,21 +22,19 @@ class RecentHistorylist extends StatelessWidget {
         builder: (context,  AsyncSnapshot<QuerySnapshot>snapshot) {
           if(snapshot.hasData) {
             if(snapshot.data!.docs.length == 0) {
-              return Expanded(
-                child: Center(
-                  child: Column(
-                    children: [
-                      SizedBox(height: 100,),
-                      Icon(Icons.warning_amber_outlined, size: 60, color: Colors.yellow,),
-                      SizedBox(height: 50,),
-                      Text(
-                        'Tidak Ada Riwayat',
-                        style: kHeaderText,
-                        textAlign: TextAlign.center,
-                      ),   
-                      SizedBox(height: 200,),
-                    ],
-                  ),
+              return Center(
+                child: Column(
+                  children: [
+                    SizedBox(height: 100,),
+                    Icon(Icons.warning_amber_outlined, size: 60, color: Colors.yellow,),
+                    SizedBox(height: 50,),
+                    Text(
+                      'Tidak Ada Riwayat',
+                      style: kHeaderText,
+                      textAlign: TextAlign.center,
+                    ),   
+                    SizedBox(height: 200,),
+                  ],
                 ),
               );
             }

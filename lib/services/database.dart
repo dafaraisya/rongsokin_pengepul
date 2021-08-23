@@ -18,6 +18,7 @@ class DatabaseService {
       'birthDate' : birthDate,
       'phoneNumber' : phoneNumber,
       'historyTransactions' : [],
+      'tolakRequests' : [],
       'totalTransaction' : 0,
       'rating' : 0.0,
       'poin' : 0
@@ -83,6 +84,6 @@ class DatabaseService {
   }
 
   Future<DocumentSnapshot> getUsers(String id) async {
-    return await db.collection("userPengepul").doc(id).get();
+    return await db.collection("usersPengepul").doc(id).get();
   }
 }

@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:photo_view/photo_view.dart';
 import 'package:provider/provider.dart';
 import 'package:rongsokin_pengepul/components/default_appBar.dart';
 import 'package:intl/intl.dart';
+import 'package:rongsokin_pengepul/models/items_model.dart';
 import 'package:rongsokin_pengepul/models/user_pengepul.dart';
 import 'package:rongsokin_pengepul/screens/home/home.dart';
 import 'package:rongsokin_pengepul/services/database.dart';
@@ -27,6 +29,14 @@ class FinalTransaction extends StatefulWidget {
 }
 
 class _FinalTransactionState extends State<FinalTransaction> {
+  List<String> _splitName = [];
+  num total = 0;
+  String namaUser = '';
+
+  String? splitUsername(String username) {
+    _splitName.addAll(username.split(" "));
+  }
+
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<UserPengepul?>(context);
@@ -58,17 +68,6 @@ class _FinalTransactionState extends State<FinalTransaction> {
                       );                      
                     }
                   }
-                  // if((snapshot.data as dynamic)["selesai"]) {
-                  //   WidgetsBinding.instance!.addPostFrameCallback(
-                  //     (_) => Navigator.push(context,
-                  //       MaterialPageRoute(
-                  //         builder: (context) => Home(),
-                  //       ),
-                  //     ),
-                  //   );
-                  // } else {
-                  //   return Container();
-                  // }
                   return Container();
                 }
               ),
@@ -93,6 +92,8 @@ class _FinalTransactionState extends State<FinalTransaction> {
                       .snapshots(),
                     builder: (context, snapshot) {
                       if(snapshot.hasData) {
+                        splitUsername((snapshot.data as dynamic)["username"]);
+                        namaUser = (snapshot.data as dynamic)["username"];
                         return  Container(
                           height: 120,
                           decoration: BoxDecoration(
@@ -109,9 +110,12 @@ class _FinalTransactionState extends State<FinalTransaction> {
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      (snapshot.data as dynamic)["username"],
-                                      style: TextStyle(                                 
-                                        fontSize: 20,
+                                      _splitName.length <= 1 ?
+                                      _splitName[0] :
+                                      _splitName[0] + ' ' + _splitName[1],
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: _splitName.length <= 1 ? 20 : 17,
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
@@ -286,10 +290,23 @@ class ItemListCard extends StatefulWidget {
 }
 
 class _ItemListCardState extends State<ItemListCard> {
-  var currency = new NumberFormat.simpleCurrency(locale: 'id_ID');
+
+  String unit = '';
 
   @override
   Widget build(BuildContext context) {
+    //Set Satuan
+    if (getCategory(widget.namaBarang) == 'Elektronik')
+      unit = ' unit';
+    else if (widget.namaBarang == 'Galon' || widget.namaBarang == 'Tas')
+      unit = ' pcs';
+    else if (widget.namaBarang == 'Radiator')
+      unit = ' set';
+    else if (widget.namaBarang == 'Sepatu')
+      unit = '';
+    else
+      unit = ' Kg';
+
     return Card(
       elevation: 6,
       shape: RoundedRectangleBorder(
@@ -304,10 +321,40 @@ class _ItemListCardState extends State<ItemListCard> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Container(
-                    height: 80,
-                    width: 80,
-                    decoration: BoxDecoration(
+                  InkWell(
+                    onTap: () {
+                      showDialog(
+                        context: context, 
+                        builder: (BuildContext context) {
+                          return Stack(
+                            children: [
+                              PhotoView(
+                                imageProvider: NetworkImage(
+                                  widget.fotoBarang,
+                                ),
+                              ),
+                              Positioned(
+                                right: 10,
+                                top: 10,
+                                child: ElevatedButton(
+                                  style: ButtonStyle(
+                                    backgroundColor: MaterialStateProperty.all(Colors.transparent)
+                                  ),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  }, 
+                                  child: Icon(Icons.close)
+                                ),
+                              )
+                            ],
+                          );
+                        }
+                      );
+                    },
+                    child: Container(
+                      height: 80,
+                      width: 80,
+                      decoration: BoxDecoration(
                         color: Colors.grey,
                         borderRadius: BorderRadius.circular(10),
                         image: DecorationImage(
@@ -315,7 +362,9 @@ class _ItemListCardState extends State<ItemListCard> {
                             widget.fotoBarang,
                           ),
                           fit: BoxFit.cover,
-                        )),
+                        )
+                      ),
+                    ),
                   ),
                   SizedBox(width: 20),
                   Expanded(
@@ -358,7 +407,7 @@ class _ItemListCardState extends State<ItemListCard> {
                         style: TextStyle(fontSize: 16),
                       ),
                       Text(
-                        widget.berat.toString() + ' Kg',
+                        widget.berat.toString() + unit,
                         style: TextStyle(fontSize: 16),
                       )
                     ],

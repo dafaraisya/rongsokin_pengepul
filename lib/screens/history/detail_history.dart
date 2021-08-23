@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:photo_view/photo_view.dart';
 import 'package:rongsokin_pengepul/components/default_appBar.dart';
 import 'package:rongsokin_pengepul/constant.dart';
+import 'package:rongsokin_pengepul/models/items_model.dart';
 
 class DetailHistory extends StatelessWidget {
   const DetailHistory({ 
@@ -204,9 +206,22 @@ class ItemListCard extends StatefulWidget {
 }
 
 class _ItemListCardState extends State<ItemListCard> {
-
+  String unit = '';
+  
   @override
   Widget build(BuildContext context) {
+    //Set Satuan
+    if (getCategory(widget.namaBarang) == 'Elektronik')
+      unit = ' unit';
+    else if (widget.namaBarang == 'Galon' || widget.namaBarang == 'Tas')
+      unit = ' pcs';
+    else if (widget.namaBarang == 'Radiator')
+      unit = ' set';
+    else if (widget.namaBarang == 'Sepatu')
+      unit = '';
+    else
+      unit = ' Kg';
+
     return Card(
       elevation: 6,
       shape: RoundedRectangleBorder(
@@ -221,18 +236,47 @@ class _ItemListCardState extends State<ItemListCard> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Container(
-                    height: 80,
-                    width: 80,
-                    decoration: BoxDecoration(
-                        color: Colors.grey,
-                        borderRadius: BorderRadius.circular(10),
-                        image: DecorationImage(
-                          image: NetworkImage(
-                            widget.fotoBarang,
-                          ),
-                          fit: BoxFit.cover,
-                        )),
+                  InkWell(
+                    onTap: () {
+                      showDialog(
+                        context: context, 
+                        builder: (BuildContext context) {
+                          return Stack(
+                            children: [
+                              PhotoView(
+                                imageProvider: NetworkImage(widget.fotoBarang)
+                              ),
+                              Positioned(
+                                right: 10,
+                                top: 10,
+                                child: ElevatedButton(
+                                  style: ButtonStyle(
+                                    backgroundColor: MaterialStateProperty.all(Colors.transparent)
+                                  ),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  }, 
+                                  child: Icon(Icons.close)
+                                ),
+                              )
+                            ],
+                          );
+                        }
+                      );
+                    },
+                    child: Container(
+                      height: 80,
+                      width: 80,
+                      decoration: BoxDecoration(
+                          color: Colors.grey,
+                          borderRadius: BorderRadius.circular(10),
+                          image: DecorationImage(
+                            image: NetworkImage(
+                              widget.fotoBarang,
+                            ),
+                            fit: BoxFit.cover,
+                          )),
+                    ),
                   ),
                   SizedBox(width: 20),
                   Expanded(
@@ -275,7 +319,7 @@ class _ItemListCardState extends State<ItemListCard> {
                         style: TextStyle(fontSize: 16),
                       ),
                       Text(
-                        widget.berat.toString() + ' Kg',
+                        widget.berat.toString() + unit,
                         style: TextStyle(fontSize: 16),
                       )
                     ],

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:rongsokin_pengepul/components/failed_screen.dart';
 import 'package:rongsokin_pengepul/constant.dart';
 import 'package:rongsokin_pengepul/screens/transaction/confirmation_pickup.dart';
@@ -19,6 +20,7 @@ class RequestNotification extends StatelessWidget {
 
   @override
   Widget build(context) {
+    var currency = new NumberFormat.simpleCurrency(locale: 'id_ID');
     final AuthService _auth = AuthService();
     return AlertDialog(
       shape: RoundedRectangleBorder(
@@ -106,7 +108,7 @@ class RequestNotification extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text((snapshot.data as dynamic)["listBarang"][index]["namaBarang"]),
-                                  Text((snapshot.data as dynamic)["listBarang"][index]["berat"].toString())
+                                  Text('${currency.format((snapshot.data as dynamic)["listBarang"][index]["harga"])}')
                                 ],
                               )
                             ],

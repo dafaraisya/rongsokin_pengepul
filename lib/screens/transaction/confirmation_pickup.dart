@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:photo_view/photo_view.dart';
 import 'package:rongsokin_pengepul/components/default_appBar.dart';
 import 'package:intl/intl.dart';
+import 'package:rongsokin_pengepul/models/items_model.dart';
 import 'package:rongsokin_pengepul/screens/transaction/final_transaction.dart';
 import 'package:rongsokin_pengepul/services/database.dart';
 
@@ -36,7 +38,13 @@ class ConfirmationPickUp extends StatefulWidget {
 }
 
 class _ConfirmationPickUpState extends State<ConfirmationPickUp> {
+  List<String> _splitName = [];
   num total = 0;
+  String namaUser = '';
+
+  String? splitUsername(String username) {
+    _splitName.addAll(username.split(" "));
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -100,6 +108,8 @@ class _ConfirmationPickUpState extends State<ConfirmationPickUp> {
                       .snapshots(),
                     builder: (context, snapshot) {
                       if(snapshot.hasData) {
+                        splitUsername((snapshot.data as dynamic)["username"]);
+                        namaUser = (snapshot.data as dynamic)["username"];
                         return Container(
                           height: 120,
                           decoration: BoxDecoration(
@@ -116,9 +126,12 @@ class _ConfirmationPickUpState extends State<ConfirmationPickUp> {
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      (snapshot.data as dynamic)["username"],
-                                      style: TextStyle(                                 
-                                        fontSize: 20,
+                                      _splitName.length <= 1 ?
+                                      _splitName[0] :
+                                      _splitName[0] + ' ' + _splitName[1],
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: _splitName.length <= 1 ? 20 : 17,
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
@@ -197,6 +210,7 @@ class _ConfirmationPickUpState extends State<ConfirmationPickUp> {
                     .snapshots(),
                   builder: (context, snapshot) {
                     if(snapshot.hasData) {
+                      print('data ada');
                       return ListView.builder(
                         scrollDirection: Axis.vertical,
                         shrinkWrap: true,
@@ -219,11 +233,14 @@ class _ConfirmationPickUpState extends State<ConfirmationPickUp> {
                           );
                         },
                       );
+                    } else {
+                      print('data tidak ada');
+                      return CircularProgressIndicator();
                     }
                     
-                    return Container(
-                      child: Text('Loading...'),
-                    );
+                    // return Container(
+                    //   child: Text('Loading...'),
+                    // );
                   },
                 ),
               ),
@@ -297,10 +314,23 @@ class _ItemListCardState extends State<ItemListCard> {
     maxWeight = weight;
     super.initState();
   }
-  var currency = new NumberFormat.simpleCurrency(locale: 'id_ID');
+
+  String unit = '';
 
   @override
   Widget build(BuildContext context) {
+    //Set Satuan
+    if (getCategory(widget.namaBarang) == 'Elektronik')
+      unit = ' unit';
+    else if (widget.namaBarang == 'Galon' || widget.namaBarang == 'Tas')
+      unit = ' pcs';
+    else if (widget.namaBarang == 'Radiator')
+      unit = ' set';
+    else if (widget.namaBarang == 'Sepatu')
+      unit = '';
+    else
+      unit = ' Kg';
+
     return Card(
       elevation: 6,
       shape: RoundedRectangleBorder(
@@ -361,10 +391,40 @@ class _ItemListCardState extends State<ItemListCard> {
                       });
                     },
                   ),
-                  Container(
-                    height: 80,
-                    width: 80,
-                    decoration: BoxDecoration(
+                  InkWell(
+                    onTap: () {
+                      showDialog(
+                        context: context, 
+                        builder: (BuildContext context) {
+                          return Stack(
+                            children: [
+                              PhotoView(
+                                imageProvider: NetworkImage(
+                                  widget.fotoBarang,
+                                ),
+                              ),
+                              Positioned(
+                                right: 10,
+                                top: 10,
+                                child: ElevatedButton(
+                                  style: ButtonStyle(
+                                    backgroundColor: MaterialStateProperty.all(Colors.transparent)
+                                  ),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  }, 
+                                  child: Icon(Icons.close)
+                                ),
+                              )
+                            ],
+                          );
+                        }
+                      );
+                    },
+                    child: Container(
+                      height: 80,
+                      width: 80,
+                      decoration: BoxDecoration(
                         color: Colors.grey,
                         borderRadius: BorderRadius.circular(10),
                         image: DecorationImage(
@@ -372,7 +432,9 @@ class _ItemListCardState extends State<ItemListCard> {
                             widget.fotoBarang,
                           ),
                           fit: BoxFit.cover,
-                        )),
+                        )
+                      ),
+                    ),
                   ),
                   SizedBox(width: 20),
                   Expanded(
@@ -442,7 +504,7 @@ class _ItemListCardState extends State<ItemListCard> {
                       ),
                       SizedBox(width: 2,),
                       Text(
-                        weight.toString() + ' Kg',
+                        weight.toString() + unit,
                         style: TextStyle(
                           fontSize: 15,
                         ),

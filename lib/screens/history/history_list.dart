@@ -1,13 +1,13 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+// import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
+// import 'package:intl/intl.dart';
+// import 'package:provider/provider.dart';
 import 'package:rongsokin_pengepul/components/default_appBar.dart';
 import 'package:rongsokin_pengepul/components/default_navBar.dart';
-import 'package:rongsokin_pengepul/constant.dart';
+// import 'package:rongsokin_pengepul/constant.dart';
 import 'package:rongsokin_pengepul/enums.dart';
-import 'package:rongsokin_pengepul/models/user_pengepul.dart';
-import 'package:rongsokin_pengepul/screens/history/detail_history.dart';
+// import 'package:rongsokin_pengepul/models/user_pengepul.dart';
+// import 'package:rongsokin_pengepul/screens/history/detail_history.dart';
 import 'package:rongsokin_pengepul/screens/history/recent_history_list.dart';
 
 class HistoryList extends StatelessWidget {
@@ -15,7 +15,6 @@ class HistoryList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<UserPengepul?>(context);
     return Scaffold(
       appBar: DefaultAppBar(backButton: true,),
       bottomNavigationBar: DefaultNavBar(selectedMenu: MenuState.transaction),
