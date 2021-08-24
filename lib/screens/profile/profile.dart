@@ -77,7 +77,7 @@ class _ProfileState extends State<Profile> {
                   ),
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
-                    children: [Icon(Icons.star), Text('4,7')],
+                    children: [Icon(Icons.star), Text((snapshot.data as dynamic)["rating"].toStringAsFixed(1))],
                   ),
                 ),
                 Padding(
@@ -124,7 +124,7 @@ class _ProfileState extends State<Profile> {
                               alertMessage: "Yakin ingin keluar ?", 
                               press: () async {
                                 await _auth.signOut();
-                                Navigator.of(context).push(MaterialPageRoute(builder: (_) {
+                                Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) {
                                   return SignIn();
                                 }));
                               }

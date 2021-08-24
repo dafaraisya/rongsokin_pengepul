@@ -40,7 +40,7 @@ class DefaultNavBar extends StatelessWidget {
                     : inActiveIconColor,
               ),
               onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(builder: (_) {
+                Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) {
                   return Home();
                 }));
               },

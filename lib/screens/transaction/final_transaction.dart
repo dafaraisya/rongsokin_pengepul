@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:provider/provider.dart';
@@ -39,7 +40,8 @@ class _FinalTransactionState extends State<FinalTransaction> {
 
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<UserPengepul?>(context);
+    // final user = Provider.of<UserPengepul?>(context);
+    final user = FirebaseAuth.instance.currentUser!;
     return Scaffold(
       appBar: DefaultAppBar(backButton: false,),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
@@ -197,7 +199,7 @@ class _FinalTransactionState extends State<FinalTransaction> {
                       builder: (context, snapshot) {
                         if(snapshot.hasData) {
                           if((snapshot.data as dynamic)["selesai"]){
-                            DatabaseService(uid: user!.uid).addPoint(widget.total);
+                            DatabaseService(uid: user.uid).addPoint(widget.total);
                             WidgetsBinding.instance!.addPostFrameCallback(
                               (_) => Navigator.pushReplacement(context,
                                 MaterialPageRoute(

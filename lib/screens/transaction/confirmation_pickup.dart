@@ -307,6 +307,7 @@ class _ItemListCardState extends State<ItemListCard> {
   int price = 1;
   int weight = 1;
   int maxWeight = 1;
+  String unit = '';
   @override
   void initState() {
     price = widget.harga;
@@ -315,7 +316,6 @@ class _ItemListCardState extends State<ItemListCard> {
     super.initState();
   }
 
-  String unit = '';
 
   @override
   Widget build(BuildContext context) {

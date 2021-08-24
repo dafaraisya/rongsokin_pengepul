@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 // import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +13,8 @@ import 'package:rongsokin_pengepul/components/request_notification.dart';
 import 'package:rongsokin_pengepul/enums.dart';
 import 'package:rongsokin_pengepul/models/user_pengepul.dart';
 import 'package:rongsokin_pengepul/screens/history/recent_history_list.dart';
+import 'package:rongsokin_pengepul/screens/home/request_transaction.dart';
+import 'package:rongsokin_pengepul/screens/sign_in/sign_in.dart';
 
 List<String> tolakRequests = [];
 bool isSwitched = false;
@@ -25,12 +28,19 @@ class Home extends StatefulWidget {
 
 // Component Nav Bar masih statis
 class _HomeState extends State<Home> {
+  
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     //get data user from firebase
-    final user = Provider.of<UserPengepul?>(context);
+    // final user = Provider.of<UserPengepul?>(context);
+    final user = FirebaseAuth.instance.currentUser!;
     var db = FirebaseFirestore.instance;
-    final dataProfileUser = db.collection("usersPengepul").doc(user!.uid).snapshots();
+    final dataProfileUser = db.collection("usersPengepul").doc(user.uid).snapshots();
 
     return Scaffold(
       appBar: DefaultAppBar(backButton: false,),
@@ -38,47 +48,44 @@ class _HomeState extends State<Home> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: InkWell(
-          onTap: () {},
-          child: Container(
-            height: 60,
-            width: MediaQuery.of(context).size.width,
-            decoration: BoxDecoration(
-              color: Color(0xFFFFC233),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Spacer(),
-                Text(
-                  statusPengepul,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontFamily: 'Montserrat',
-                    fontSize: 20,
-                    fontWeight: FontWeight.w600,
-                  ),
+        child: Container(
+          height: 60,
+          width: MediaQuery.of(context).size.width,
+          decoration: BoxDecoration(
+            color: Color(0xFFFFC233),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Spacer(),
+              Text(
+                statusPengepul,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontFamily: 'Montserrat',
+                  fontSize: 20,
+                  fontWeight: FontWeight.w600,
                 ),
-                Spacer(),
-                CupertinoSwitch(
-                  value: isSwitched,
-                  onChanged: (value) {
-                    setState(() {
-                      isSwitched = value;      
-                      if(isSwitched == false ){
-                        statusPengepul = 'Pengepul Tidak Aktif';
-                      } else {
-                        statusPengepul = 'Pengepul Aktif';
-                      }          
-                    });
-                  },
-                  trackColor: Colors.grey[300],
-                  activeColor: Colors.green,
-                ),
-                Spacer()
-              ],
-            ),
+              ),
+              Spacer(),
+              CupertinoSwitch(
+                value: isSwitched,
+                onChanged: (value) {
+                  setState(() {
+                    isSwitched = value;      
+                    if(isSwitched == false ){
+                      statusPengepul = 'Pengepul Tidak Aktif';
+                    } else {
+                      statusPengepul = 'Pengepul Aktif';
+                    }          
+                  });
+                },
+                trackColor: Colors.grey[300],
+                activeColor: Colors.green,
+              ),
+              Spacer()
+            ],
           ),
         ),
       ),
@@ -198,53 +205,6 @@ class _HomeState extends State<Home> {
                     SizedBox(height: 5),
                     // Class HistoryContent ada di bawah
                     RecentHistorylist(),
-                    // ListView.builder(
-                    //   physics: NeverScrollableScrollPhysics(),
-                    //   shrinkWrap: true,
-                    //   itemCount: (snapshot.data as dynamic)["historyTransactions"].length,
-                    //   itemBuilder: (context, index) {
-                    //     if((snapshot.data as dynamic)["historyTransactions"].length > 0) {
-                    //       return HistoryContent(
-                    //         name: (snapshot.data as dynamic)["username"], 
-                    //         weight: 0, 
-                    //         address: 'lala', 
-                    //         price: 'lala', 
-                    //         date: 'lalal'
-                    //       );  
-                    //     } 
-                    //     return Center(
-                    //       child: Text('Loading...'),
-                    //     );
-                    //   },
-                    // ),
-                    // HistoryContent(
-                    //   name: 'Nisa Sabyan',
-                    //   weight: 2,
-                    //   address: 'Jl Panderman Gang 5',
-                    //   price: 'Rp100.000,00',
-                    //   date: '27 Agustus 2021',
-                    // ),
-                    // HistoryContent(
-                    //   name: 'Nisa Sabyan',
-                    //   weight: 2,
-                    //   address: 'Jl Panderman Gang 5',
-                    //   price: 'Rp100.000,00',
-                    //   date: '27 Agustus 2021',
-                    // ),
-                    // HistoryContent(
-                    //   name: 'Nisa Sabyan',
-                    //   weight: 2,
-                    //   address: 'Jl Panderman Gang 5',
-                    //   price: 'Rp100.000,00',
-                    //   date: '27 Agustus 2021',
-                    // ),
-                    // HistoryContent(
-                    //   name: 'Nisa Sabyan',
-                    //   weight: 2,
-                    //   address: 'Jl Panderman Gang 5',
-                    //   price: 'Rp100.000,00',
-                    //   date: '27 Agustus 2021',
-                    // ),
                     SizedBox(height: 100),
                     isSwitched ? StreamBuilder(
                       stream: FirebaseFirestore.instance
@@ -264,16 +224,48 @@ class _HomeState extends State<Home> {
                               } else if(docSnapshot["dibatalkan"]) {
                                 return Container();
                               } else {
-                                  return ShowRequestDialog(
-                                    documentId: docSnapshot["documentId"],
-                                    index: index,
-                                  );
+                                WidgetsBinding.instance!.addPostFrameCallback(
+                                  (_) => Navigator.push(context,
+                                    MaterialPageRoute(
+                                      builder: (context) => RequestTransaction(
+                                        index: index,
+                                        documentId: docSnapshot["documentId"],
+                                        context: context,
+                                        tolakRequests: tolakRequests,
+                                      )
+                                    ),
+                                  ),
+                                );
                               }
+                              return Container();
                             },
                           );
                         }
                         return Container();
                       }
+                      // builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                      //   if(snapshot.hasData) {
+                      //     return ListView.builder(
+                      //       scrollDirection: Axis.vertical,
+                      //       shrinkWrap: true,
+                      //       itemCount: snapshot.data!.docs.length,
+                      //       itemBuilder: (context, index) {
+                      //         DocumentSnapshot docSnapshot = snapshot.data!.docs[index];
+                      //         if(tolakRequests.contains(docSnapshot["documentId"])) {
+                      //           return Container();
+                      //         } else if(docSnapshot["dibatalkan"]) {
+                      //           return Container();
+                      //         } else {
+                      //             return ShowRequestDialog(
+                      //               documentId: docSnapshot["documentId"],
+                      //               index: index,
+                      //             );
+                      //         }
+                      //       },
+                      //     );
+                      //   }
+                      //   return Container();
+                      // }
                     ) : Container()
                   ],
                 );

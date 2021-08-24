@@ -17,26 +17,26 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamProvider<UserPengepul?>.value(
-      value: AuthService().user, 
-      initialData: null,
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: Wrapper(),
-      ),
-    );
-    // return ChangeNotifierProvider(
-    //   create: (context) => AuthService(),
+    // return StreamProvider<UserPengepul?>.value(
+    //   value: AuthService().user, 
+    //   initialData: null,
     //   child: MaterialApp(
     //     debugShowCheckedModeBanner: false,
-    //     title: 'Rongsokin Pengepul',
-    //     theme: ThemeData(
-    //       primarySwatch: Colors.blue,
-    //       fontFamily: 'Montserrat',
-    //     ),
     //     home: Wrapper(),
     //   ),
     // );
+    return ChangeNotifierProvider(
+      create: (context) => AuthService(),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Rongsokin Pengepul',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+          fontFamily: 'Montserrat',
+        ),
+        home: Wrapper(),
+      ),
+    );
     // return MaterialApp(
     //   debugShowCheckedModeBanner: false,
     //   title: 'Rongsokin',

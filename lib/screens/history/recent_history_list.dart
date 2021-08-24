@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -7,17 +8,28 @@ import 'package:rongsokin_pengepul/models/user_pengepul.dart';
 import 'package:rongsokin_pengepul/screens/history/detail_history.dart';
 
 var currency = new NumberFormat.simpleCurrency(locale: 'id_ID');
-class RecentHistorylist extends StatelessWidget {
+class RecentHistorylist extends StatefulWidget {
   const RecentHistorylist({ Key? key }) : super(key: key);
-  
+
+  @override
+  State<RecentHistorylist> createState() => _RecentHistorylistState();
+}
+
+class _RecentHistorylistState extends State<RecentHistorylist> {
+  @override
+  void dispose() {
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<UserPengepul?>(context);
+    // final user = Provider.of<UserPengepul?>(context);
+    final user = FirebaseAuth.instance.currentUser!;
     return SingleChildScrollView(
       child: StreamBuilder(
         stream: FirebaseFirestore.instance
           .collection("requests")
-          .where("userPengepulId", isEqualTo: user!.uid)
+          // .where("userPengepulId", isEqualTo: user?.uid ?? null)
+          .where("userPengepulId", isEqualTo: user.uid)
           .snapshots(),
         builder: (context,  AsyncSnapshot<QuerySnapshot>snapshot) {
           if(snapshot.hasData) {
@@ -55,8 +67,8 @@ class RecentHistorylist extends StatelessWidget {
                     }));
                   },
                   child: HistoryContent(
-                    name: docSnapshot["namaUser"], 
-                    address: docSnapshot["lokasi"], 
+                    name: snapshot.data!.docs[index]['namaUser'], 
+                    address: docSnapshot["lokasi"].length > 0 ? docSnapshot["lokasi"] : null, 
                     price: '${currency.format(docSnapshot["total"])}', 
                     date: docSnapshot["tanggal"]
                   )

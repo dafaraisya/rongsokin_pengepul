@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rongsokin_pengepul/components/default_button.dart';
+import 'package:rongsokin_pengepul/components/default_loading.dart';
 import 'package:rongsokin_pengepul/constant.dart';
 import 'package:rongsokin_pengepul/screens/home/home.dart';
 import 'package:rongsokin_pengepul/screens/sign_up/sign_up.dart';
@@ -65,6 +66,7 @@ class _SignInFormState extends State<SignInForm> {
   String? email;
   String? password;
   final AuthService _auth = AuthService();
+  bool loading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -138,12 +140,15 @@ class _SignInFormState extends State<SignInForm> {
         DefaultButton(
           text: "Login",
           press: () async {
+            showDialog(context: context, builder: (BuildContext context) {
+              return DefaultLoading();
+            });
             dynamic result = await _auth.signIn(email!, password!);
             print(result);
             if (result == null) {
               print('error');
             } else {
-              Navigator.of(context).push(MaterialPageRoute(builder: (_) {
+              Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) {
                 return Home();
               }));
             }
