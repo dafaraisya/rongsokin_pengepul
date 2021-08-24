@@ -2,11 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view.dart';
-import 'package:provider/provider.dart';
 import 'package:rongsokin_pengepul/components/default_appBar.dart';
 import 'package:intl/intl.dart';
 import 'package:rongsokin_pengepul/models/items_model.dart';
-import 'package:rongsokin_pengepul/models/user_pengepul.dart';
 import 'package:rongsokin_pengepul/screens/home/home.dart';
 import 'package:rongsokin_pengepul/services/database.dart';
 

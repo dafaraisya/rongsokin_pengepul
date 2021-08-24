@@ -5,16 +5,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 // import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:rongsokin_pengepul/components/default_appBar.dart';
 import 'package:rongsokin_pengepul/components/default_navBar.dart';
 import 'package:rongsokin_pengepul/components/request_notification.dart';
 // import 'package:rongsokin_pengepul/constant.dart';
 import 'package:rongsokin_pengepul/enums.dart';
-import 'package:rongsokin_pengepul/models/user_pengepul.dart';
 import 'package:rongsokin_pengepul/screens/history/recent_history_list.dart';
 import 'package:rongsokin_pengepul/screens/home/request_transaction.dart';
-import 'package:rongsokin_pengepul/screens/sign_in/sign_in.dart';
 
 List<String> tolakRequests = [];
 bool isSwitched = false;
