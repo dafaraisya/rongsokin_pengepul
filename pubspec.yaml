@@ -42,6 +42,7 @@ dependencies:
   firebase_core: ^1.4.0
   firebase_storage: ^10.0.1
   intl: ^0.17.0
+  url_launcher: ^6.0.9
 
   #google font
   font_awesome_flutter: ^9.1.0
