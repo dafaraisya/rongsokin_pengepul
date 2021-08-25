@@ -148,9 +148,8 @@ class _SignInFormState extends State<SignInForm> {
             if (result == null) {
               print('error');
             } else {
-              Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) {
-                return Home();
-              }));
+              Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => Home()),
+              (Route<dynamic> route) => false);
             }
           },
         ),

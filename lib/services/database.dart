@@ -31,6 +31,7 @@ class DatabaseService {
     List<String> historyTransactions = [];
     await db.collection("requests").doc(idDocument).update({
       'diambil' : true,
+      'status' : 'diproses pengepul',
       'userPengepulId' : uid,
       'namaUserPengepul' : jsonUserPengepul['username']
     });
@@ -55,6 +56,7 @@ class DatabaseService {
   Future updateRequest(List<Map<String, dynamic>> listBarang, String documentId, num total) async{
     print(listBarang);
     return await db.collection('requests').doc(documentId).update({
+      'status' : 'dikonfirmasi pengepul',
       'total' : total,
       'listBarang' : [
         for (var i = 0; i < listBarang.length; i++) {

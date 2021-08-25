@@ -57,20 +57,28 @@ class _ConfirmationPickUpState extends State<ConfirmationPickUp> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: InkWell(
         onTap: () async {
+          for (var i = 0; i < listBarang.length; i++) {
+            if(listBarang[i]['check'] == false){
+              listBarang.removeAt(i);
+            }
+          }
           final user = FirebaseAuth.instance.currentUser != null
               ? FirebaseAuth.instance.currentUser
               : null;
-          DatabaseService(uid: user?.uid ?? null)
-              .updateRequest(listBarang, widget.documentId, total);
-          Navigator.of(context).push(MaterialPageRoute(builder: (_) {
-            listBarang.clear();
-            return FinalTransaction(
-              documentId: widget.documentId,
-              total: total,
-              userId: widget.userId,
-              location: widget.location,
-            );
-          }));
+          final result = DatabaseService(uid: user?.uid ?? null).updateRequest(listBarang, widget.documentId, total);
+          if(result == null) {
+            print('gagal');
+          } else {
+            Navigator.of(context).push(MaterialPageRoute(builder: (_) {
+              listBarang.clear();
+              return FinalTransaction(
+                documentId: widget.documentId,
+                total: total,
+                userId: widget.userId,
+                location: widget.location,
+              );
+            }));
+          }
         },
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 20),
@@ -235,7 +243,6 @@ class _ConfirmationPickUpState extends State<ConfirmationPickUp> {
                       .snapshots(),
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
-                      print('data ada');
                       return ListView.builder(
                         scrollDirection: Axis.vertical,
                         shrinkWrap: true,
@@ -269,8 +276,13 @@ class _ConfirmationPickUpState extends State<ConfirmationPickUp> {
                         },
                       );
                     } else {
-                      print('data tidak ada');
-                      return CircularProgressIndicator();
+                      return Center(
+                        child: Container(
+                          width: 30,
+                          height: 30,
+                          child: CircularProgressIndicator(),
+                        ),
+                      );
                     }
 
                     // return Container(
@@ -348,6 +360,15 @@ class _ItemListCardState extends State<ItemListCard> {
     price = widget.harga;
     weight = widget.berat;
     maxWeight = weight;
+    listBarang.add({
+      'check': false,
+      'kategori': widget.kategori,
+      'namaBarang': widget.namaBarang,
+      'deskripsi': widget.deskripsi,
+      'hargaPerItem': widget.hargaPerItem,
+      'berat': weight,
+      'fotoBarang': widget.fotoBarang
+    });
     super.initState();
   }
 
@@ -387,7 +408,7 @@ class _ItemListCardState extends State<ItemListCard> {
                       setState(() {
                         _isChecked = value!;
                         if (_isChecked) {
-                          listBarang.add({
+                          listBarang[widget.index] = ({
                             'check': _isChecked,
                             'kategori': widget.kategori,
                             'namaBarang': widget.namaBarang,
@@ -397,8 +418,8 @@ class _ItemListCardState extends State<ItemListCard> {
                             'berat': weight,
                             'fotoBarang': widget.fotoBarang
                           });
-                          // listBarang[widget.index] = {
-                          //   'check' : _isChecked,
+                          // listBarang.add({
+                          //   'check': _isChecked,
                           //   'kategori': widget.kategori,
                           //   'namaBarang': widget.namaBarang,
                           //   'deskripsi': widget.deskripsi,
@@ -406,10 +427,26 @@ class _ItemListCardState extends State<ItemListCard> {
                           //   'hargaPerItem': widget.hargaPerItem,
                           //   'berat': weight,
                           //   'fotoBarang': widget.fotoBarang
-                          // };
+                          // });
+                          // print(listBarang);
                           widget.total(countTotal()!);
                         } else {
-                          listBarang.removeAt(widget.index);
+                          // listBarang.removeAt(widget.index);
+                          // listBarang.
+                          // listBarang.remove(widget.namaBarang);
+                          // listBarang.removeWhere((item) => listBarang[widget.index]['namaBarang'] == widget.namaBarang);
+                          // listBarang.removeAt(widget.index);
+                          listBarang[widget.index] = ({
+                            'check': _isChecked,
+                            'kategori': widget.kategori,
+                            'namaBarang': widget.namaBarang,
+                            'deskripsi': widget.deskripsi,
+                            'harga': 0,
+                            'hargaPerItem': widget.hargaPerItem,
+                            'berat': weight,
+                            'fotoBarang': widget.fotoBarang
+                          });
+                          // print(listBarang);
                           // listBarang[widget.index] = {
                           //   'check' : _isChecked,
                           //   'kategori': widget.kategori,

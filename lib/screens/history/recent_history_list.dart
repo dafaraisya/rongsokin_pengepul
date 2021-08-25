@@ -28,6 +28,7 @@ class _RecentHistorylistState extends State<RecentHistorylist> {
           .collection("requests")
           // .where("userPengepulId", isEqualTo: user?.uid ?? null)
           .where("userPengepulId", isEqualTo: user.uid)
+          .orderBy('documentId', descending: true)
           .snapshots(),
         builder: (context,  AsyncSnapshot<QuerySnapshot>snapshot) {
           if(snapshot.hasData) {

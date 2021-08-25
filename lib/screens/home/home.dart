@@ -206,7 +206,8 @@ class _HomeState extends State<Home> {
                     isSwitched ? StreamBuilder(
                       stream: FirebaseFirestore.instance
                         .collection("requests")
-                        .where("diambil", isEqualTo: false)
+                        .where("uploadFotoSelesai", isEqualTo: true)
+                        .where("status", isEqualTo: 'mencari pengepul')
                         .snapshots(),
                       builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                         if(snapshot.hasData) {
