@@ -20,16 +20,17 @@ class _ProfileState extends State<Profile> {
   final AuthService _auth = AuthService();
   @override
   Widget build(BuildContext context) {
-
     //get data from firebase
     final user = FirebaseAuth.instance.currentUser!;
     var db = FirebaseFirestore.instance;
-    final dataProfileUser = db.collection("usersPengepul").doc(user.uid).snapshots();
+    final dataProfileUser =
+        db.collection("usersPengepul").doc(user.uid).snapshots();
 
     //format tanggal lahir
-    String? formattedDate (dataBirthDate) {      
+    String? formattedDate(dataBirthDate) {
       dynamic lala = dataBirthDate;
-      final birthDate = DateTime.fromMicrosecondsSinceEpoch(lala.microsecondsSinceEpoch);
+      final birthDate =
+          DateTime.fromMicrosecondsSinceEpoch(lala.microsecondsSinceEpoch);
       String formattedDate = DateFormat('dd MMMM yyyy').format(birthDate);
       return formattedDate;
     }
@@ -77,7 +78,11 @@ class _ProfileState extends State<Profile> {
                   ),
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
-                    children: [Icon(Icons.star), Text((snapshot.data as dynamic)["rating"].toStringAsFixed(1))],
+                    children: [
+                      Icon(Icons.star),
+                      Text((snapshot.data as dynamic)["rating"]
+                          .toStringAsFixed(1))
+                    ],
                   ),
                 ),
                 Padding(
@@ -94,12 +99,12 @@ class _ProfileState extends State<Profile> {
                   ),
                 ),
                 Padding(padding: EdgeInsets.only(top: 5)),
-                profileInfo(Icons.location_on_outlined, (snapshot.data as dynamic)["address"]),
+                profileInfo(Icons.location_on_outlined,
+                    (snapshot.data as dynamic)["address"]),
+                profileInfo(Icons.date_range_outlined,
+                    formattedDate((snapshot.data as dynamic)["birthDate"])),
                 profileInfo(
-                  Icons.date_range_outlined, 
-                  formattedDate((snapshot.data as dynamic)["birthDate"])
-                ),
-                profileInfo(Icons.phone, (snapshot.data as dynamic)["phoneNumber"]),
+                    Icons.phone, (snapshot.data as dynamic)["phoneNumber"]),
                 Spacer(),
                 Padding(
                   padding: const EdgeInsets.all(15.0),
@@ -117,20 +122,19 @@ class _ProfileState extends State<Profile> {
                                           BorderRadius.circular(15.0)))),
                       onPressed: () async {
                         showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return ShowAlertDialog(
-                              context: context, 
-                              alertMessage: "Yakin ingin keluar ?", 
-                              press: () async {
-                                await _auth.signOut();
-                                Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) {
-                                  return SignIn();
-                                }));
-                              }
-                            );
-                          }
-                        );
+                            context: context,
+                            builder: (BuildContext context) {
+                              return ShowAlertDialog(
+                                  context: context,
+                                  alertMessage: "Yakin ingin keluar ?",
+                                  press: () async {
+                                    await _auth.signOut();
+                                    Navigator.of(context).pushAndRemoveUntil(
+                                        MaterialPageRoute(
+                                            builder: (context) => SignIn()),
+                                        (Route<dynamic> route) => false);
+                                  });
+                            });
                       },
                       child: Text(
                         "Log Out",
