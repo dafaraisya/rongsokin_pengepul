@@ -46,40 +46,42 @@ class ShowAlertDialog extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                InkWell(
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                  child: Container(
-                    width: 150,
-                    padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
-                    decoration: BoxDecoration(
-                      color: Colors.grey[200],
-                      borderRadius: BorderRadius.only(
-                          bottomLeft: Radius.circular(15.0),
+                Expanded(
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: Container(
+                      padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
+                      decoration: BoxDecoration(
+                        color: Colors.grey[200],
+                        borderRadius: BorderRadius.only(
+                            bottomLeft: Radius.circular(15.0),
+                        ),
                       ),
-                    ),
-                    child: Text(
-                      "No",
-                      style: TextStyle(color: Colors.black),
-                      textAlign: TextAlign.center,
+                      child: Text(
+                        "No",
+                        style: TextStyle(color: Colors.black),
+                        textAlign: TextAlign.center,
+                      ),
                     ),
                   ),
                 ),
-                InkWell(
-                  onTap: press,
-                  child: Container(
-                    width: 150,
-                    padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
-                    decoration: BoxDecoration(
-                      color: kPrimaryColor,
-                      borderRadius: BorderRadius.only(
-                          bottomRight: Radius.circular(15.0)),
-                    ),
-                    child: Text(
-                      "Yes",
-                      style: TextStyle(color: Colors.white),
-                      textAlign: TextAlign.center,
+                Expanded(
+                  child: InkWell(
+                    onTap: press,
+                    child: Container(
+                      padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
+                      decoration: BoxDecoration(
+                        color: kSecondaryColor,
+                        borderRadius: BorderRadius.only(
+                            bottomRight: Radius.circular(15.0)),
+                      ),
+                      child: Text(
+                        "Yes",
+                        style: TextStyle(color: Colors.white),
+                        textAlign: TextAlign.center,
+                      ),
                     ),
                   ),
                 ),

@@ -123,62 +123,64 @@ class RequestNotification extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      InkWell(
-                        onTap: () async{
-                          tolakRequests.add(documentId);
-                          await _auth.updateTolakRequests(tolakRequests);
-                          Navigator.pop(context);
-                        },
-                        child: Container(
-                          width: 150,
-                          padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
-                          decoration: BoxDecoration(
-                            color: Colors.grey[200],
-                            borderRadius: BorderRadius.only(
-                              bottomLeft: Radius.circular(15.0),
+                      Expanded(
+                        child: InkWell(
+                          onTap: () async{
+                            tolakRequests.add(documentId);
+                            await _auth.updateTolakRequests(tolakRequests);
+                            Navigator.pop(context);
+                          },
+                          child: Container(
+                            padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
+                            decoration: BoxDecoration(
+                              color: Colors.grey[200],
+                              borderRadius: BorderRadius.only(
+                                bottomLeft: Radius.circular(15.0),
+                              ),
                             ),
-                          ),
-                          child: Text(
-                            "Abaikan",
-                            style: TextStyle(color: Colors.black),
-                            textAlign: TextAlign.center,
+                            child: Text(
+                              "Abaikan",
+                              style: TextStyle(color: Colors.black),
+                              textAlign: TextAlign.center,
+                            ),
                           ),
                         ),
                       ),
-                      InkWell(
-                        onTap: () async{
-                          dynamic result = await _auth.updateTerimaRequests(documentId);
-                          if(result == 'sudah diambil') {
-                            Navigator.of(context).push(MaterialPageRoute(builder: (_){
-                              return FailedScreen(message: 'Opps Order sudah diambil\noleh Pengepul Lain');
-                            }));
-                          } else if(result == 'dibatalkan') {
-                            Navigator.of(context).push(MaterialPageRoute(builder: (_){
-                              return FailedScreen(message: 'Opps Order sudah dibatalkan\noleh user');
-                            }));
-                          }  
-                          else {
-                            Navigator.of(context).push(MaterialPageRoute(builder: (_) {
-                              return ConfirmationPickUp(
-                                documentId: documentId, 
-                                userId: (snapshot.data as dynamic)["userId"],
-                                location: (snapshot.data as dynamic)["lokasi"]
-                              );
-                            }));                      
-                          }
-                        },
-                        child: Container(
-                          width: 150,
-                          padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
-                          decoration: BoxDecoration(
-                            color: kSecondaryColor,
-                            borderRadius:
-                                BorderRadius.only(bottomRight: Radius.circular(15.0)),
-                          ),
-                          child: Text(
-                            "Ambil",
-                            style: TextStyle(color: kPrimaryColor),
-                            textAlign: TextAlign.center,
+                      Expanded(
+                        child: InkWell(
+                          onTap: () async{
+                            dynamic result = await _auth.updateTerimaRequests(documentId);
+                            if(result == 'sudah diambil') {
+                              Navigator.of(context).push(MaterialPageRoute(builder: (_){
+                                return FailedScreen(message: 'Opps Order sudah diambil\noleh Pengepul Lain');
+                              }));
+                            } else if(result == 'dibatalkan') {
+                              Navigator.of(context).push(MaterialPageRoute(builder: (_){
+                                return FailedScreen(message: 'Opps Order sudah dibatalkan\noleh user');
+                              }));
+                            }  
+                            else {
+                              Navigator.of(context).push(MaterialPageRoute(builder: (_) {
+                                return ConfirmationPickUp(
+                                  documentId: documentId, 
+                                  userId: (snapshot.data as dynamic)["userId"],
+                                  location: (snapshot.data as dynamic)["lokasi"]
+                                );
+                              }));                      
+                            }
+                          },
+                          child: Container(
+                            padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
+                            decoration: BoxDecoration(
+                              color: kSecondaryColor,
+                              borderRadius:
+                                  BorderRadius.only(bottomRight: Radius.circular(15.0)),
+                            ),
+                            child: Text(
+                              "Ambil",
+                              style: TextStyle(color: kPrimaryColor),
+                              textAlign: TextAlign.center,
+                            ),
                           ),
                         ),
                       ),
