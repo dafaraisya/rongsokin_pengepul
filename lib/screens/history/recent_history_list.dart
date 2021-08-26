@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:rongsokin_pengepul/constant.dart';
 import 'package:rongsokin_pengepul/screens/history/detail_history.dart';
+import 'package:rongsokin_pengepul/screens/transaction/confirmation_pickup.dart';
+import 'package:rongsokin_pengepul/screens/transaction/final_transaction.dart';
 
 var currency = new NumberFormat.simpleCurrency(locale: 'id_ID');
 class RecentHistorylist extends StatefulWidget {
@@ -57,19 +59,39 @@ class _RecentHistorylistState extends State<RecentHistorylist> {
                 DocumentSnapshot docSnapshot = snapshot.data!.docs[index]; 
                 return InkWell(
                   onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(builder: (_){
-                      return DetailHistory(
-                        documentId: docSnapshot["documentId"],
-                        userId: docSnapshot["userId"],
-                        total: docSnapshot["total"]
-                      );
-                    }));
+                    if(docSnapshot["status"] == 'selesai') {
+                      Navigator.of(context).push(MaterialPageRoute(builder: (_){
+                        return DetailHistory(
+                          documentId: docSnapshot["documentId"],
+                          userId: docSnapshot["userId"],
+                          total: docSnapshot["total"]
+                        );
+                      }));
+                    } else if(docSnapshot["status"] == 'diproses pengepul') {
+                      Navigator.of(context).push(MaterialPageRoute(builder: (_){
+                        return ConfirmationPickUp(
+                          documentId: docSnapshot["documentId"],
+                          userId: docSnapshot["userId"],
+                          location: docSnapshot["lokasi"],
+                        );
+                      }));
+                    } else if(docSnapshot["status"] == 'dikonfirmasi pengepul') {
+                      Navigator.of(context).push(MaterialPageRoute(builder: (_){
+                        return FinalTransaction(
+                          documentId: docSnapshot["documentId"],
+                          userId: docSnapshot["userId"],
+                          total: docSnapshot["total"],
+                          location: docSnapshot["lokasi"],
+                        );
+                      }));
+                    }
                   },
                   child: HistoryContent(
                     name: snapshot.data!.docs[index]['namaUser'], 
                     address: docSnapshot["lokasi"].length > 0 ? docSnapshot["lokasi"] : null, 
                     price: '${currency.format(docSnapshot["total"])}', 
-                    date: docSnapshot["tanggal"]
+                    date: docSnapshot["tanggal"],
+                    status: docSnapshot["status"],
                   )
                 );
               },
@@ -87,12 +109,14 @@ class HistoryContent extends StatelessWidget {
   final String address;
   final String price;
   final Timestamp date;
+  final String status;
 
   HistoryContent({
     required this.name,
     required this.address,
     required this.price,
     required this.date,
+    required this.status,
   });
 
   String formattedDate (date) {      
@@ -159,6 +183,26 @@ class HistoryContent extends StatelessWidget {
                       fontWeight: FontWeight.w500,
                       fontStyle: FontStyle.italic,
                     ),
+                  ),
+                  SizedBox(height: 3),
+                  status == 'selesai' ? Text(
+                    status,
+                    style: TextStyle(
+                      fontFamily: 'Montserrat',
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                      fontStyle: FontStyle.italic,
+                      color: Colors.green
+                    ),
+                  ) : Text(
+                    status,
+                    style: TextStyle(
+                      fontFamily: 'Montserrat',
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                      fontStyle: FontStyle.italic,
+                      color: Colors.blue
+                    )
                   ),
                 ],
               )

@@ -14,10 +14,55 @@
       },
       "oauth_client": [
         {
-          "client_id": "903806546678-ncab28tqnglmrjid0o6rjkl4t5c4ik6l.apps.googleusercontent.com",
+          "client_id": "903806546678-tvkvdlaiv0m7vp92k73v8o13jnl6qgfr.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.rongsokin.rongsokin_app",
+            "certificate_hash": "2c1479c086eaaae6deff1c5b4f7fef7e87919ab1"
+          }
+        },
+        {
+          "client_id": "903806546678-rrq98oa87acqqef96c1cbfjno1cfjf7f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCW5ZLmC52bgaWsxYopPcnW-434i-lWl90"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "903806546678-rrq98oa87acqqef96c1cbfjno1cfjf7f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:903806546678:android:3271f20217eb574ee0f2d7",
+        "android_client_info": {
+          "package_name": "com.rongsokin.rongsokin_user"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "903806546678-joe03pf0tiv9n93cefhpqnclijaur2l7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.rongsokin.rongsokin_user",
+            "certificate_hash": "aa21b8e28b3e798f5af3094a02b028ee8763d6ff"
+          }
+        },
+        {
+          "client_id": "903806546678-smgfu6rt54raqr6334c54rbna3m594ks.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.rongsokin.rongsokin_user",
             "certificate_hash": "cdc78129aa69a9b37202270f4589506ac3d8d683"
           }
         },

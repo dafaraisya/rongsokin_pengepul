@@ -93,7 +93,7 @@ class _ConfirmationPickUpState extends State<ConfirmationPickUp> {
               child: Text(
                 'Ambil Sekarang',
                 style: TextStyle(
-                  color: Color(0xFF1D438A),
+                  color: Colors.black,
                   fontSize: 22,
                 ),
               ),

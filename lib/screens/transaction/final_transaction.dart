@@ -114,7 +114,7 @@ class _FinalTransactionState extends State<FinalTransaction> {
                                       _splitName[0] :
                                       _splitName[0] + ' ' + _splitName[1],
                                       style: TextStyle(
-                                        color: Colors.white,
+                                        color: Colors.black,
                                         fontSize: _splitName.length <= 1 ? 20 : 17,
                                         fontWeight: FontWeight.bold,
                                       ),
@@ -216,7 +216,7 @@ class _FinalTransactionState extends State<FinalTransaction> {
                                 kategori : (snapshot.data as dynamic)["listBarang"][index]["kategori"],
                                 namaBarang: (snapshot.data as dynamic)["listBarang"][index]["namaBarang"],
                                 deskripsi: (snapshot.data as dynamic)["listBarang"][index]["deskripsi"],
-                                harga: (snapshot.data as dynamic)["listBarang"][index]["harga"],
+                                harga: (snapshot.data as dynamic)["listBarang"][index]["harga"] == null ? 0 : (snapshot.data as dynamic)["listBarang"][index]["harga"],
                                 berat: (snapshot.data as dynamic)["listBarang"][index]["berat"],
                                 fotoBarang : (snapshot.data as dynamic)["listBarang"][index]["fotoBarang"],
                                 total: (snapshot.data as dynamic)["total"],
